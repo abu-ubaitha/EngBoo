@@ -1,0 +1,941 @@
+# Replace your current `HomePage.html` with this full code
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EngBoo</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:'Baloo 2',sans-serif;
+  overflow-x:hidden;
+
+  transition:
+  background 1.2s cubic-bezier(.22,1,.36,1),
+  filter 0.8s ease;
+
+  color:#1B0C0C;
+
+  background-size:200% 200%;
+
+  animation:bgFlow 10s ease infinite;
+}
+
+@keyframes bgFlow{
+
+  0%{
+    background-position:0% 50%;
+  }
+
+  50%{
+    background-position:100% 50%;
+  }
+
+  100%{
+    background-position:0% 50%;
+  }
+
+}
+
+body.mode-spellbee{
+  background:
+  linear-gradient(
+  135deg,
+  #ff3c00,
+  #ff9100,
+  #ffd000
+  );
+
+  color:white;
+}
+
+body.mode-spot{
+  background:
+  linear-gradient(
+  135deg,
+  #001f4d,
+  #0059ff,
+  #00c6ff
+  );
+
+  color:white;
+}
+
+body.mode-hangman{
+  background:
+  linear-gradient(
+  135deg,
+  #180018,
+  #5b0060,
+  #ff00aa
+  );
+
+  color:white;
+}
+
+body.mode-comingsoon{
+  background:
+  linear-gradient(
+  135deg,
+  #0f2027,
+  #203a43,
+  #2c5364
+  );
+
+  color:white;
+}
+
+nav{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  padding:18px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  z-index:1000;
+  backdrop-filter:blur(30px);
+  background:rgba(255,255,255,0.08);
+
+  transition:
+  transform 0.4s ease,
+  background 0.3s ease;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:2rem;
+  font-weight:800;
+}
+
+.logo span{
+  font-size:2.4rem;
+}
+
+.nav-links{
+  display:flex;
+  gap:24px;
+  align-items:center;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:white;
+  font-weight:700;
+  font-size:1.1rem;
+}
+
+.login-btn{
+  background:#000000;
+  color:#E7E1B1;
+  padding:10px 18px;
+  border-radius:999px;
+  font-weight:800;
+}
+
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:6px;
+  cursor:pointer;
+}
+
+.hamburger div{
+  width:28px;
+  height:4px;
+  background:white;
+  border-radius:999px;
+  transition:0.3s;
+}
+
+.mobile-menu{
+  position:fixed;
+  top:0;
+  right:-100%;
+  width:80%;
+  height:100vh;
+  background:#111827;
+  display:flex;
+  flex-direction:column;
+  padding:120px 30px;
+  gap:26px;
+  transition:0.45s ease;
+  z-index:999;
+}
+
+.mobile-menu.active{
+  right:0;
+}
+
+.mobile-menu a{
+  text-decoration:none;
+  color:white;
+  font-size:1.4rem;
+  font-weight:700;
+}
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:120px 20px 60px;
+}
+
+.hero h1{
+  font-size:clamp(3rem,7vw,7rem);
+  line-height:1;
+  font-weight:800;
+}
+
+.hero p{
+  margin-top:24px;
+  max-width:800px;
+  font-size:1.4rem;
+  line-height:1.5;
+  opacity:0.95;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:20px;
+  margin-top:40px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.hero-buttons a{
+  text-decoration:none;
+  padding:16px 30px;
+  border-radius:999px;
+  font-size:1.1rem;
+  font-weight:800;
+  transition:0.3s;
+}
+
+.primary-btn{
+  background:#000000;
+  color: white;
+}
+
+.secondary-btn{
+  border:2px solid rgba(255,255,255,0.5);
+  color:white;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover{
+  transform:translateY(-5px) scale(1.03);
+}
+
+.carousel-section{
+  padding:60px 20px;
+}
+
+.section-title{
+  text-align:center;
+  font-size:3rem;
+  margin-bottom:40px;
+  font-weight:800;
+}
+
+.carousel-wrapper{
+  position:relative;
+  width:100%;
+  max-width:1500px;
+  margin:auto;
+}
+
+.carousel-track{
+  display:flex;
+  transition:transform 0.5s ease;
+}
+
+.game-slide{
+  min-width:100%;
+  padding:10px;
+}
+
+.game-card{
+  width:100%;
+  min-height:480px;
+  border-radius:20px;
+  padding:50px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+}
+
+.spellbee-card{
+  background:linear-gradient(135deg,#FF6500,#FF0000);
+   
+}
+
+.spot-card{
+  background:linear-gradient(135deg,#175385,#00163a);
+   
+}
+
+.hangman-card{
+  background:linear-gradient(135deg,#800040,#c300ff);
+
+}
+
+.coming-card{
+ background:linear-gradient(135deg,#232526,#414345);
+
+}
+
+.game-tag{
+  background:rgba(255,255,255,0.15);
+  width:max-content;
+  padding:10px 18px;
+  border-radius:999px;
+  font-weight:800;
+  backdrop-filter:blur(10px);
+}
+
+.game-card h2{
+  font-size:4rem;
+  line-height:1;
+  margin-top:20px;
+}
+
+.game-card p{
+  font-size:1.3rem;
+  margin-top:18px;
+  max-width:700px;
+  line-height:1.5;
+}
+
+.game-actions{
+  margin-top:40px;
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+.play-btn,
+.leaderboard-btn{
+  text-decoration:none;
+  padding:16px 26px;
+  border-radius:999px;
+  font-weight:800;
+  transition:0.3s;
+}
+
+.play-btn{
+  background:0D530E;
+  color:E7E1B1;
+}
+
+.leaderboard-btn{
+  border:2px solid rgba(255,255,255,0.4);
+  color:white;
+}
+
+.play-btn:hover,
+.leaderboard-btn:hover{
+  transform:scale(1.05);
+}
+
+.arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:70px;
+  height:70px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  color:white;
+  font-size:2rem;
+  cursor:pointer;
+  backdrop-filter:blur(15px);
+  z-index:10;
+}
+
+.arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:70px;
+  height:70px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,0.18);
+  color:white;
+  font-size:2rem;
+  cursor:pointer;
+  backdrop-filter:blur(18px);
+  z-index:10;
+
+  transition:
+  transform 0.25s ease,
+  background 0.25s ease,
+  box-shadow 0.25s ease;
+
+  animation:arrowPulse 2s infinite;
+}
+
+.arrow:hover{
+
+  transform:
+  translateY(-50%)
+  scale(1.18);
+
+  background:
+  rgba(255,255,255,0.32);
+
+  box-shadow:
+  0 0 30px rgba(255,255,255,0.35);
+
+}
+
+.arrow:active{
+
+  transform:
+  translateY(-50%)
+  scale(0.92);
+
+}
+
+@keyframes arrowPulse{
+
+  0%{
+    transform:translateY(-50%) scale(1);
+  }
+
+  50%{
+    transform:translateY(-50%) scale(1.08);
+  }
+
+  100%{
+    transform:translateY(-50%) scale(1);
+  }
+
+}
+
+.arrow-left{
+  left:-20px;
+}
+
+.arrow-right{
+  right:-20px;
+}
+
+.features{
+  padding:120px 20px;
+}
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
+  max-width:1300px;
+  margin:auto;
+}
+
+.feature-card{
+  background:rgba(255,255,255,0.12);
+  border-radius:30px;
+  padding:35px;
+  backdrop-filter:blur(14px);
+}
+
+.feature-card h3{
+  font-size:1.8rem;
+  margin-bottom:14px;
+}
+
+.feature-card p{
+  font-size:1.05rem;
+  line-height:1.6;
+}
+
+.faq{
+  padding:100px 20px;
+  max-width:1000px;
+  margin:auto;
+}
+
+.faq-item{
+  background:rgba(255,255,255,0.12);
+  border-radius:24px;
+  margin-bottom:18px;
+  overflow:hidden;
+}
+
+.faq-question{
+  padding:24px;
+  cursor:pointer;
+  font-size:1.3rem;
+  font-weight:800;
+}
+
+.faq-answer{
+  padding:0 24px 24px;
+  display:none;
+  font-size:1.05rem;
+  line-height:1.6;
+}
+
+footer{
+  padding:60px 20px;
+  text-align:center;
+  background:rgba(0,0,0,0.15);
+}
+
+.footer-links{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.footer-links a{
+  text-decoration:none;
+  color:white;
+  font-weight:700;
+}
+
+@media(max-width:900px){
+
+  .nav-links{
+    display:none;
+  }
+
+  .hamburger{
+    display:flex;
+  }
+
+  .game-card{
+    padding:35px;
+    min-height:520px;
+  }
+
+  .game-card h2{
+    font-size:3rem;
+  }
+
+  .arrow{
+    width:58px;
+    height:58px;
+    font-size:1.5rem;
+  }
+
+  .arrow-left{
+    left:0;
+  }
+
+  .arrow-right{
+    right:0;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .hero h1{
+    font-size:3.5rem;
+  }
+
+  .hero p{
+    font-size:1.1rem;
+  }
+
+  .section-title{
+    font-size:2.3rem;
+  }
+
+  .game-card h2{
+    font-size:2.4rem;
+  }
+
+  .game-card p{
+    font-size:1.05rem;
+  }
+
+  .arrow{
+    top:auto;
+    bottom:-80px;
+    transform:none;
+  }
+
+  .arrow:hover{
+    transform:scale(1.05);
+  }
+
+  .arrow-left{
+    left:32%;
+  }
+
+  .arrow-right{
+    right:32%;
+  }
+
+  .carousel-section{
+    padding-bottom:130px;
+  }
+
+}
+
+</style>
+</head>
+<body class="mode-spellbee">
+
+<nav>
+
+<div class="logo">
+  <span>🐱</span>
+  EngBoo
+</div>
+
+<div class="nav-links">
+  <a href="#games">Games</a>
+  <a href="#features">Features</a>
+  <a href="#faq">FAQ</a>
+  <a href="#footer">TOS</a>
+  <a href="#" class="login-btn">Google Login</a>
+</div>
+
+<div class="hamburger" id="hamburger">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#games">Games</a>
+  <a href="#features">Features</a>
+  <a href="#faq">FAQ</a>
+  <a href="#footer">TOS</a>
+  <a href="#">Google Login</a>
+</div>
+
+<section class="hero">
+
+<h1>Learn English.<br>Like An Arcade Game.</h1>
+
+<p>
+EngBoo transforms grammar, spelling, and vocabulary into addictive competitive games with streaks, leaderboards, animations, XP, and rewards.
+</p>
+
+<div class="hero-buttons">
+  <a href="#games" class="primary-btn">Start Playing</a>
+  <a href="#features" class="secondary-btn">Explore Features</a>
+</div>
+
+</section>
+
+<section class="carousel-section" id="games">
+
+<h2 class="section-title">Choose Your Mode</h2>
+
+<div class="carousel-wrapper">
+
+<button class="arrow arrow-left" id="prevBtn">❮</button>
+<button class="arrow arrow-right" id="nextBtn">❯</button>
+
+<div class="carousel-track" id="carouselTrack">
+
+<div class="game-slide">
+<div class="game-card spellbee-card">
+
+<div>
+<div class="game-tag">SPELLING ARENA</div>
+<h2>Spell Bee</h2>
+<p>
+Fast-paced spelling battles with combo streaks, XP rewards, and competitive rankings.
+</p>
+</div>
+
+<div class="game-actions">
+<a href="SpellBee.html" class="play-btn">Play Now</a>
+<a href="#" class="leaderboard-btn">Leaderboard</a>
+</div>
+
+</div>
+</div>
+
+<div class="game-slide">
+<div class="game-card spot-card">
+
+<div>
+<div class="game-tag">GRAMMAR DETECTIVE</div>
+<h2>Spot The Error</h2>
+<p>
+Find grammar mistakes under pressure with satisfying effects and arcade-style progression.
+</p>
+</div>
+
+<div class="game-actions">
+<a href="SpotTheError.html" class="play-btn">Play Now</a>
+<a href="#" class="leaderboard-btn">Leaderboard</a>
+</div>
+
+</div>
+</div>
+
+<div class="game-slide">
+<div class="game-card hangman-card">
+
+<div>
+<div class="game-tag">WORD SURVIVAL</div>
+<h2>Hangman</h2>
+<p>
+Classic hangman redesigned with modern visuals, pressure mechanics, and competitive gameplay.
+</p>
+</div>
+
+<div class="game-actions">
+<a href="Hangman.html" class="play-btn">Play Now</a>
+<a href="#" class="leaderboard-btn">Leaderboard</a>
+</div>
+
+</div>
+</div>
+
+<div class="game-slide">
+<div class="game-card coming-card">
+
+<div>
+<div class="game-tag">COMING SOON</div>
+<h2>More Games Incoming</h2>
+<p>
+Typing races, pronunciation battles, speed quizzes, vocabulary PvP, and more are coming soon.
+</p>
+</div>
+
+<div class="game-actions">
+<a href="#" class="play-btn">Coming Soon</a>
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</section>
+
+<section class="features" id="features">
+
+<h2 class="section-title">Why EngBoo Feels Addictive</h2>
+
+<div class="features-grid">
+
+<div class="feature-card">
+<h3>🏆 Competitive Rankings</h3>
+<p>
+Climb real leaderboards with authenticated usernames and skill-based progression.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>🎮 Arcade Feel</h3>
+<p>
+Heavy animations, smooth transitions, combo streaks, and immersive game energy.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>⚙️ Custom Settings</h3>
+<p>
+Toggle sound effects, confetti, light mode, dark mode, and visual intensity.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>🐱 Boo The Mascot</h3>
+<p>
+Your cat companion reacts to streaks, wins, fails, and achievements.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="faq" id="faq">
+
+<h2 class="section-title">FAQ</h2>
+
+<div class="faq-item">
+<div class="faq-question">Is EngBoo free?</div>
+<div class="faq-answer">
+Yes. Core games are completely free to play.
+</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question">Will progress save automatically?</div>
+<div class="faq-answer">
+Yes. Google login support will sync scores, streaks, and leaderboard data.
+</div>
+</div>
+
+<div class="faq-item">
+<div class="faq-question">Can I disable effects?</div>
+<div class="faq-answer">
+Yes. You can disable confetti, sound effects, and intense animations in settings.
+</div>
+</div>
+
+</section>
+
+<footer id="footer">
+
+<div class="footer-links">
+  <a href="#">Terms of Service</a>
+  <a href="#">Privacy Policy</a>
+  <a href="#">Contact</a>
+</div>
+
+<p>
+© 2026 EngBoo. All Rights Reserved.
+</p>
+
+</footer>
+
+<script>
+
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click',()=>{
+  mobileMenu.classList.toggle('active');
+});
+
+const track = document.getElementById('carouselTrack');
+const nextBtn = document.getElementById('nextBtn');
+const prevBtn = document.getElementById('prevBtn');
+
+const body = document.body;
+
+const modes = [
+  'mode-spellbee',
+  'mode-spot',
+  'mode-hangman',
+  'mode-comingsoon'
+];
+
+let currentIndex = 0;
+
+function updateCarousel(){
+
+  track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+  body.className = '';
+  body.classList.add(modes[currentIndex]);
+
+}
+
+nextBtn.addEventListener('click',()=>{
+
+  currentIndex++;
+
+  if(currentIndex >= modes.length){
+    currentIndex = 0;
+  }
+
+  updateCarousel();
+
+});
+
+prevBtn.addEventListener('click',()=>{
+
+  currentIndex--;
+
+  if(currentIndex < 0){
+    currentIndex = modes.length - 1;
+  }
+
+  updateCarousel();
+
+});
+
+const faqQuestions = document.querySelectorAll('.faq-question');
+
+faqQuestions.forEach(question=>{
+
+  question.addEventListener('click',()=>{
+
+    const answer = question.nextElementSibling;
+
+    if(answer.style.display === 'block'){
+      answer.style.display = 'none';
+    }
+
+    else{
+      answer.style.display = 'block';
+    }
+
+  });
+
+});
+
+// AUTO HIDE NAVBAR
+
+const nav =
+document.querySelector('nav');
+
+let lastScrollY =
+window.scrollY;
+
+window.addEventListener(
+'scroll',
+()=>{
+
+  if(window.scrollY > lastScrollY){
+
+    nav.style.transform =
+    'translateY(-120%)';
+
+  }
+
+  else{
+
+    nav.style.transform =
+    'translateY(0)';
+
+  }
+
+  lastScrollY =
+  window.scrollY;
+
+});
+
+</script>
+
+</body>
+</html>
