@@ -1110,6 +1110,17 @@ Built with passion for interactive English learning.
 
 <script>
 
+window.addEventListener("load", () => {
+  const data = getData();
+
+  if (!data.currentUser) {
+    window.location.href = "Login.html";
+    return;
+  }
+
+  loadLeaderboard(); // only run if logged in
+});
+
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 
@@ -1278,9 +1289,7 @@ function logout() {
   window.location.href = "login.html";
 }
 
-window.addEventListener("load", () => {
-  loadLeaderboard();
-});
+
 
 </script>
 

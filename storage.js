@@ -128,3 +128,16 @@ data.users[username] = {
     spot: { plays: 0, best: 0 } 
   }
 };
+
+function requireLogin() {
+  const data = getData();
+  if (!data.currentUser) {
+    window.location.href = "Login.html";
+  }
+  return data.currentUser;
+}
+
+window.addEventListener("load", () => {
+  requireLogin();
+  loadLeaderboard();
+});
