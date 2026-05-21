@@ -202,6 +202,47 @@ button:hover{
   animation:correctFlash 0.45s;
 }
 
+@media(max-width:600px){
+
+  body{
+    padding:12px;
+  }
+
+  .game-container{
+    padding:1.2rem;
+    border-radius:20px;
+  }
+
+  h1{
+    font-size:1.6rem;
+  }
+
+@media(max-width:600px){
+
+  body{
+    padding:12px;
+  }
+
+  .game-container{
+    padding:1.2rem;
+    border-radius:20px;
+  }
+
+  h1{
+    font-size:1.6rem;
+  }
+
+  #countdown-number{
+    font-size:2rem;   /* smaller text */
+    text-align:center;
+    padding:0 16px;
+    line-height:1.2;
+    max-width:90%;
+    word-break:break-word;
+  }
+
+}
+
 @keyframes correctFlash{
   0%{
     background:#b7ffb7;
@@ -244,19 +285,21 @@ button:hover{
   pointer-events:none;
   z-index:999;
 }
-
+}
 </style>
 </head>
 <body>
 
-<a href="index.html" class="back-btn">
-  ←
-</a>
+<div class="game-container">
 
-<div id="countdown-screen">
-  <div id="countdown-number">
-    TAP TO START
+  <a href="index.html" class="back-btn">
+    ←
+  </a>
+
+  <div id="game-area">
+    ...
   </div>
+
 </div>
 
 <canvas id="confetti"></canvas>
@@ -360,45 +403,93 @@ src="https://assets.mixkit.co/active_storage/sfx/254/254-preview.mp3">
 
 const words = [
 
-  {
-    word:"cat",
-    hint:"A small domestic animal"
-  },
-
-  {
-    word:"apple",
-    hint:"A common fruit"
-  },
-
-  {
-    word:"calendar",
-    hint:"Used to track dates"
-  },
-
-  {
-    word:"beautiful",
-    hint:"Very attractive"
-  },
-
-  {
-    word:"knowledge",
-    hint:"Information and understanding"
-  },
-
-  {
-    word:"psychology",
-    hint:"Study of the mind"
-  },
-
-  {
-    word:"entrepreneur",
-    hint:"Business creator"
-  },
-
-  {
-    word:"miscellaneous",
-    hint:"Mixed variety"
-  }
+  {word:"cat",hint:"A small domestic animal"},
+  {word:"pen",hint:"used to write with"},
+  {word:"shoe",hint:"footwear"},
+  {word:"mice",hint:"plural of mouse"},
+  {word:"apple",hint:"A common fruit"},
+  {word:"teacher",hint:"A person who teaches"},
+  {word:"banana",hint:"Yellow fruit"},
+  {word:"school",hint:"Place to study"},
+  {word:"window",hint:"Glass opening in a wall"},
+  {word:"garden",hint:"Area where plants grow"},
+  {word:"planet",hint:"Earth is one"},
+  {word:"orange",hint:"A citrus fruit"},
+  {word:"bottle",hint:"Used to store liquids"},
+  {word:"picture",hint:"Captured image"},
+  {word:"holiday",hint:"Vacation time"},
+  {word:"monster",hint:"A scary creature"},
+  {word:"football",hint:"Popular world sport"},
+  {word:"library",hint:"Place with many books"},
+  {word:"blanket",hint:"Keeps you warm"},
+  {word:"backpack",hint:"Bag carried on shoulders"},
+  {word:"sandwich",hint:"Food between bread"},
+  {word:"hospital",hint:"Place for medical care"},
+  {word:"language",hint:"Used for communication"},
+  {word:"calendar",hint:"Used to track dates"},
+  {word:"beautiful",hint:"Very attractive"},
+  {word:"knowledge",hint:"Information and understanding"},
+  {word:"psychology",hint:"Study of the mind"},
+  {word:"entrepreneur",hint:"Business creator"},
+  {word:"miscellaneous",hint:"Mixed variety"},
+  {word:"adventure",hint:"Exciting experience"},
+  {word:"electricity",hint:"Powers devices"},
+  {word:"restaurant",hint:"Place to eat"},
+  {word:"champion",hint:"A winner"},
+  {word:"triangle",hint:"Shape with three sides"},
+  {word:"computer",hint:"Electronic machine"},
+  {word:"keyboard",hint:"Used for typing"},
+  {word:"internet",hint:"Global digital network"},
+  {word:"mountain",hint:"Very tall landform"},
+  {word:"umbrella",hint:"Used in rain"},
+  {word:"airplane",hint:"Vehicle that flies"},
+  {word:"language",hint:"Method of communication"},
+  {word:"solution",hint:"Answer to a problem"},
+  {word:"strategy",hint:"Plan to achieve something"},
+  {word:"elephant",hint:"Largest land animal"},
+  {word:"kangaroo",hint:"Australian jumping animal"},
+  {word:"alligator",hint:"Large reptile"},
+  {word:"volcano",hint:"Mountain that erupts"},
+  {word:"microscope",hint:"Used to magnify tiny things"},
+  {word:"astronaut",hint:"Travels to space"},
+  {word:"galaxy",hint:"Massive group of stars"},
+  {word:"chocolate",hint:"Sweet cocoa treat"},
+  {word:"diamond",hint:"Valuable gemstone"},
+  {word:"treasure",hint:"Hidden valuable items"},
+  {word:"festival",hint:"Large celebration"},
+  {word:"exercise",hint:"Physical activity"},
+  {word:"dangerous",hint:"Not safe"},
+  {word:"creative",hint:"Full of ideas"},
+  {word:"friendly",hint:"Kind and welcoming"},
+  {word:"dinosaur",hint:"Ancient giant reptile"},
+  {word:"waterfall",hint:"Falling water from height"},
+  {word:"championship",hint:"Big competition final"},
+  {word:"technology",hint:"Modern digital advancement"},
+  {word:"imagination",hint:"Creative thinking ability"},
+  {word:"architecture",hint:"Building design art"},
+  {word:"environment",hint:"Natural surroundings"},
+  {word:"communication",hint:"Sharing information"},
+  {word:"mathematics",hint:"Subject involving numbers"},
+  {word:"responsibility",hint:"Duty or obligation"},
+  {word:"encyclopedia",hint:"Book of information"},
+  {word:"transportation",hint:"Moving people or goods"},
+  {word:"university",hint:"Higher education institution"},
+  {word:"temperature",hint:"Measure of heat"},
+  {word:"opportunity",hint:"A favorable chance"},
+  {word:"friendship",hint:"Close relationship"},
+  {word:"dictionary",hint:"Book of word meanings"},
+  {word:"conversation",hint:"Talking between people"},
+  {word:"presentation",hint:"Giving information publicly"},
+  {word:"communication",hint:"Exchange of ideas"},
+  {word:"celebration",hint:"Special happy event"},
+  {word:"photography",hint:"Taking pictures"},
+  {word:"independent",hint:"Not controlled by others"},
+  {word:"determination",hint:"Strong will to succeed"},
+  {word:"motivation",hint:"Reason to keep going"},
+  {word:"achievement",hint:"Something successfully done"},
+  {word:"competition",hint:"Contest between people"},
+  {word:"development",hint:"Growth and improvement"},
+  {word:"congratulations",hint:"Words for praising success"}
 
 ];
 
@@ -409,6 +500,7 @@ let currentWord = "";
 let timer = 10;
 let timerInterval;
 let replayLimit = 2;
+let usedWords = [];
 
 const scoreElement = document.getElementById("score");
 const levelElement = document.getElementById("level");
@@ -487,10 +579,24 @@ function getWord(){
 
   const availableWords = getDifficultyWords();
 
+  let remainingWords =
+    availableWords.filter(
+      item => !usedWords.includes(item.word)
+    );
+
+  if(remainingWords.length === 0){
+
+    usedWords = [];
+
+    remainingWords = availableWords;
+  }
+
   const selected =
-    availableWords[
-      Math.floor(Math.random() * availableWords.length)
+    remainingWords[
+      Math.floor(Math.random() * remainingWords.length)
     ];
+
+  usedWords.push(selected.word);
 
   currentWord = selected.word;
 
@@ -649,10 +755,11 @@ function endGame(){
 
 function restartGame(){
 
+  
   score = 0;
   level = 1;
   streak = 0;
-
+usedWords = [];
   scoreElement.textContent = score;
   levelElement.textContent = level;
 
@@ -685,7 +792,10 @@ function shareScore(){
   }
 }
 
-function startCountdown(){
+
+
+
+  function startCountdown(){
 
   let count = 3;
 
@@ -738,45 +848,8 @@ function startCountdown(){
     }
 
   },1000);
-}{
-
-  let count = 3;
-
-  const countdownNumber =
-    document.getElementById("countdown-number");
-
-  const countdownScreen =
-    document.getElementById("countdown-screen");
-
-  countdownNumber.textContent = count;
-
-  const interval = setInterval(() => {
-
-    count--;
-
-    if(count > 0){
-
-      countdownNumber.textContent = count;
-
-    }
-
-    else{
-
-      countdownNumber.textContent = "GO!";
-
-      setTimeout(() => {
-
-        countdownScreen.style.display = "none";
-
-        getWord();
-
-      },700);
-
-      clearInterval(interval);
-    }
-
-  },1000);
 }
+
 
 function launchConfetti(){
 
@@ -817,8 +890,7 @@ function launchConfetti(){
 
       ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
 
-      ctx.fillStyle =
- ctx.fillStyle = "#6b3e26";
+      ctx.fillStyle = "#6b3e26";
 
       ctx.fill();
     }

@@ -7,6 +7,7 @@
 
 <style>
 
+
 :root{
   --primary:#0e257a;
   --secondary:#F3BE7A;
@@ -299,12 +300,101 @@ input:focus{
 
 @media(max-width:600px){
 
-  .sentence{
-    font-size:1.3rem;
+body{
+  padding:10px;
+  align-items:center;
+}
+  .game-container{
+    padding:1rem;
+    border-radius:18px;
+    margin-top:10px;
   }
 
-  .options{
-    grid-template-columns:1fr;
+  h1{
+    font-size:1.5rem;
+    margin-top:10px;
+  }
+
+  .top-bar{
+    gap:0.6rem;
+    justify-content:center;
+    font-size:0.9rem;
+  }
+
+  .score,
+  .level,
+  .timer{
+    font-size:0.95rem;
+  }
+
+  .hearts{
+    font-size:1.2rem;
+  }
+
+  .sentence{
+    font-size:1.15rem;
+    line-height:1.7;
+    margin:1.4rem 0;
+  }
+
+  .word{
+    padding:0.22rem 0.45rem;
+    margin:0.12rem;
+  }
+
+  #instruction-text{
+    font-size:0.9rem;
+    margin-top:0 !important;
+  }
+
+  .option-btn{
+    min-height:54px;
+    padding:0.9rem;
+    font-size:0.92rem;
+    border-radius:12px;
+  }
+
+  .submit-btn{
+    width:100%;
+    padding:0.95rem;
+    font-size:0.95rem;
+  }
+
+  input{
+    padding:0.9rem;
+    font-size:0.95rem;
+  }
+
+  .feedback,
+  .motivation{
+    font-size:0.92rem;
+  }
+
+  .game-over h2{
+    font-size:1.5rem;
+  }
+
+  #final-score{
+    font-size:2.2rem;
+  }
+
+  /* FIX HUGE TAP TO START */
+
+  #countdown-number{
+    font-size:2.4rem;
+    text-align:center;
+    line-height:1.2;
+    padding:0 20px;
+    max-width:90%;
+    word-break:break-word;
+  }
+
+  .back-btn{
+    width:38px;
+    height:38px;
+    font-size:1.1rem;
+    top:14px;
+    left:14px;
   }
 
 }
@@ -435,7 +525,7 @@ src="https://assets.mixkit.co/active_storage/sfx/2220/2220-preview.mp3">
 
 <script>
 
-
+let usedQuestions = [];
 const clickSound =
 document.getElementById("click-sound");
 
@@ -447,28 +537,34 @@ loseSound.volume = 0.15;
 
 const questions = [
 
+
+/* EASY */
+
 {
 sentence:"She do not like apples.",
 wrong:["do"],
 answers:["does"],
 explanation:"'She' uses 'does', not 'do'.",
-options:["do","does","did","done"]
+options:["do","does","did","done"],
+difficulty:1
 },
 
 {
 sentence:"He are playing football.",
 wrong:["are"],
 answers:["is"],
-explanation:"'He' uses 'is', not 'are'.",
-options:["are","is","am","be"]
+explanation:"'He' uses 'is'.",
+options:["are","is","am","be"],
+difficulty:1
 },
 
 {
 sentence:"They was happy yesterday.",
 wrong:["was"],
 answers:["were"],
-explanation:"'They' uses 'were', not 'was'.",
-options:["was","were","is","be"]
+explanation:"'They' uses 'were'.",
+options:["was","were","is","be"],
+difficulty:1
 },
 
 {
@@ -476,7 +572,8 @@ sentence:"I goed to school yesterday.",
 wrong:["goed"],
 answers:["went"],
 explanation:"Past tense of go is went.",
-options:["goed","went","goes","gone"]
+options:["goed","went","goes","gone"],
+difficulty:1
 },
 
 {
@@ -484,16 +581,197 @@ sentence:"She don't likes coffee.",
 wrong:["don't"],
 answers:["doesn't"],
 explanation:"'She' uses 'doesn't'.",
-options:["don't","doesn't","didn't","not"]
+options:["don't","doesn't","didn't","not"],
+difficulty:1
 },
+
+{
+sentence:"He have a new bicycle.",
+wrong:["have"],
+answers:["has"],
+explanation:"'He' uses 'has'.",
+options:["have","has","had","having"],
+difficulty:1
+},
+
+{
+sentence:"We was late to class.",
+wrong:["was"],
+answers:["were"],
+explanation:"'We' uses 'were'.",
+options:["was","were","is","am"],
+difficulty:1
+},
+
+{
+sentence:"She eat breakfast every morning.",
+wrong:["eat"],
+answers:["eats"],
+explanation:"'She' uses 'eats'.",
+options:["eat","eats","eating","ate"],
+difficulty:1
+},
+
+/* MEDIUM */
 
 {
 sentence:"He go to school and eat lunch yesterday.",
 wrong:["go","eat"],
 answers:["went","ate"],
-explanation:"Past tense needed: went and ate.",
-options:["went","ate","goes","eated"]
+explanation:"Past tense needed.",
+options:["went","ate","goes","eated"],
+difficulty:2
+},
+
+{
+sentence:"They has completed the assignment.",
+wrong:["has"],
+answers:["have"],
+explanation:"'They' uses 'have'.",
+options:["has","have","had","having"],
+difficulty:2
+},
+
+{
+sentence:"She was watching TV when the lights go out.",
+wrong:["go"],
+answers:["went"],
+explanation:"Past tense needed.",
+options:["go","went","gone","going"],
+difficulty:2
+},
+
+{
+sentence:"I have seen him yesterday.",
+wrong:["have"],
+answers:["saw"],
+explanation:"Use simple past with yesterday.",
+options:["have","saw","seen","seeing"],
+difficulty:2
+},
+
+{
+sentence:"There is many students in the hall.",
+wrong:["is"],
+answers:["are"],
+explanation:"Plural noun uses 'are'.",
+options:["is","are","was","be"],
+difficulty:2
+},
+
+{
+sentence:"She can sings beautifully.",
+wrong:["sings"],
+answers:["sing"],
+explanation:"After 'can', use base verb.",
+options:["sings","sing","sang","sung"],
+difficulty:2
+},
+
+
+/* HARD */
+
+{
+sentence:"Neither of the boys were prepared for the competition.",
+wrong:["were"],
+answers:["was"],
+explanation:"'Neither' is singular.",
+options:["were","was","are","be"],
+difficulty:3
+},
+
+{
+sentence:"One of the players have injured his leg.",
+wrong:["have"],
+answers:["has"],
+explanation:"'One' is singular.",
+options:["have","has","had","having"],
+difficulty:3
+},
+
+{
+sentence:"She is one of the smartest student in the class.",
+wrong:["student"],
+answers:["students"],
+explanation:"Use plural noun here.",
+options:["student","students","student's","students'"],
+difficulty:3
+},
+
+{
+sentence:"The teacher gave an useful example.",
+wrong:["an"],
+answers:["a"],
+explanation:"'Useful' starts with consonant sound.",
+options:["a","an","the","no article"],
+difficulty:3
+},
+
+{
+sentence:"He insisted to paying the bill himself.",
+wrong:["to"],
+answers:["on"],
+explanation:"Correct phrase is 'insisted on'.",
+options:["to","on","for","with"],
+difficulty:3
+},
+
+{
+sentence:"Had I knew about the meeting, I would have attended.",
+wrong:["knew"],
+answers:["known"],
+explanation:"Use past participle with 'had'.",
+options:["knew","known","know","knowing"],
+difficulty:3
+},
+
+{
+sentence:"No sooner did he arrive when it started raining.",
+wrong:["when"],
+answers:["than"],
+explanation:"Correct phrase is 'No sooner... than'.",
+options:["when","than","then","that"],
+difficulty:3
+},
+
+/* VERY HARD MULTI ERROR */
+
+{
+sentence:"She don't went to the market yesterday.",
+wrong:["don't","went"],
+answers:["didn't","go"],
+explanation:"Use 'didn't go'.",
+options:["didn't","go","went","goes"],
+difficulty:4
+},
+
+{
+sentence:"The childrens was playing in the park.",
+wrong:["childrens","was"],
+answers:["children","were"],
+explanation:"Correct plural is 'children' and use 'were'.",
+options:["children","were","was","childs"],
+difficulty:4
+},
+
+{
+sentence:"He have wrote a letter to his friend.",
+wrong:["have","wrote"],
+answers:["has","written"],
+explanation:"Correct form is 'has written'.",
+options:["has","written","wrote","have"],
+difficulty:4
+},
+
+{
+sentence:"She can dances very good.",
+wrong:["dances","good"],
+answers:["dance","well"],
+explanation:"Use base verb and adverb.",
+options:["dance","well","good","dances"],
+difficulty:4
 }
+
 
 ];
 
@@ -593,6 +871,7 @@ function unlockAudio(){
 
 }
 
+
 function getQuestion(){
 
   clearInterval(timerInterval);
@@ -603,29 +882,79 @@ function getQuestion(){
   correctedWords = [];
   timerBox.classList.remove("timer-warning");
 
-let availableQuestions;
+  let availableQuestions = [];
 
-// LEVELS 1-5
-// ONLY SINGLE ERROR QUESTIONS
-if(level <= 5){
+  // LEVEL BASED DIFFICULTY
 
-  availableQuestions =
-  questions.filter(q => q.wrong.length === 1);
+  if(level <= 3){
 
-}
+    availableQuestions =
+    questions.filter(q => q.difficulty === 1);
 
-// LEVEL 6+
-// MULTI ERROR QUESTIONS ALLOWED
-else{
+  }
 
-  availableQuestions = questions;
+  else if(level <= 6){
 
-}
+    availableQuestions =
+    questions.filter(q =>
+      q.difficulty <= 2
+    );
 
-currentQuestion =
-availableQuestions[
-Math.floor(Math.random()*availableQuestions.length)
-];
+  }
+
+  else if(level <= 10){
+
+    availableQuestions =
+    questions.filter(q =>
+      q.difficulty <= 3
+    );
+
+  }
+
+  else{
+
+    availableQuestions = questions;
+
+  }
+
+  // REMOVE RECENTLY USED QUESTIONS
+
+  let remainingQuestions =
+  availableQuestions.filter(q =>
+    !usedQuestions.includes(q.sentence)
+  );
+
+  // RESET IF ALL USED
+
+  if(remainingQuestions.length === 0){
+
+    usedQuestions = [];
+
+    remainingQuestions = availableQuestions;
+  }
+
+  // RANDOM QUESTION
+
+  currentQuestion =
+  remainingQuestions[
+    Math.floor(
+      Math.random() *
+      remainingQuestions.length
+    )
+  ];
+
+  // SAVE USED QUESTION
+
+  usedQuestions.push(
+    currentQuestion.sentence
+  );
+
+  // KEEP ONLY LAST 10
+
+  if(usedQuestions.length > 10){
+
+    usedQuestions.shift();
+  }
 
   renderSentence();
 
@@ -638,14 +967,34 @@ Math.floor(Math.random()*availableQuestions.length)
     multipleChoiceArea.innerHTML = "";
   }
 
-  if(level > 3){
+  // HARDER TIMER WITH LEVELS
 
-    startTimer();
-
-  } else {
+  if(level <= 3){
 
     timeElement.textContent = "--";
 
+  }
+
+  else{
+
+    if(level <= 5){
+
+      timer = 20;
+
+    }
+
+    else if(level <= 10){
+
+      timer = 15;
+
+    }
+
+    else{
+
+      timer = 10;
+    }
+
+    startTimer();
   }
 
 }
@@ -974,8 +1323,6 @@ function updateHearts(){
 
 function startTimer(){
 
-  timer = 20;
-
   timeElement.textContent = timer;
 
   timerInterval = setInterval(() => {
@@ -984,30 +1331,30 @@ function startTimer(){
 
     timeElement.textContent = timer;
 
-if(timer <= 5){
+    if(timer <= 5){
 
-  timerBox.classList.add("timer-warning");
+      timerBox.classList.add("timer-warning");
 
-  if(timer > 0){
+      if(timer > 0){
 
-    timeoutSound.pause();
-    timeoutSound.currentTime = 0;
+        timeoutSound.pause();
 
-    timeoutSound.play().catch(() => {});
-  }
+        timeoutSound.currentTime = 0;
 
-}
+        timeoutSound.play().catch(() => {});
+      }
+
+    }
 
     if(timer <= 0){
 
       clearInterval(timerInterval);
 
-timeoutSound.pause();
+      timeoutSound.pause();
 
-timeoutSound.currentTime = 0;
+      timeoutSound.currentTime = 0;
 
-timeoutSound.play()
-.catch(() => {});
+      timeoutSound.play().catch(() => {});
 
       handleWrong();
     }
@@ -1117,8 +1464,7 @@ function launchConfetti(){
 
       ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
 
-      ctx.fillStyle =
-  ctx.fillStyle = "#ffffff";
+ctx.fillStyle = "#ffffff";
 
       ctx.fill();
 
@@ -1231,14 +1577,18 @@ document.getElementById("countdown-screen")
   once:true
 });
 
-correctionInput.addEventListener("keydown",(e)=>{
+if(correctionInput){
 
-  if(e.key === "Enter"){
+  correctionInput.addEventListener("keydown",(e)=>{
 
-    submitCorrection();
-  }
+    if(e.key === "Enter"){
 
-});
+      submitCorrection();
+    }
+
+  });
+
+}
 
 </script>
 

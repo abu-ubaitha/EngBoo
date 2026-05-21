@@ -281,14 +281,62 @@ h1{
 
 @media(max-width:600px){
 
+  body{
+    padding:12px;
+  }
+
+  .game-container{
+    padding:1.2rem;
+    border-radius:20px;
+  }
+
+  h1{
+    font-size:1.6rem;
+  }
+
+  .top-bar{
+    gap:0.6rem;
+    justify-content:center;
+  }
+
+  .stat{
+    font-size:0.9rem;
+  }
+
   .keyboard{
-    grid-template-columns:repeat(5,1fr);
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:8px;
+    width:100%;
+  }
+
+  .key{
+    padding:0.8rem 0.2rem;
+    font-size:0.9rem;
+    min-width:0;
   }
 
   .letter-box{
-    width:42px;
-    height:52px;
-    font-size:1.5rem;
+    width:40px;
+    height:50px;
+    font-size:1.4rem;
+  }
+
+  .hint{
+    font-size:0.95rem;
+    line-height:1.5;
+  }
+
+  .reveal-btn{
+    width:100%;
+    font-size:0.95rem;
+    padding:0.9rem;
+  }
+
+  #countdown-number{
+    font-size:3rem;
+    text-align:center;
+    padding:0 20px;
+    line-height:1.2;
   }
 
 }
@@ -396,11 +444,19 @@ src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0e6c2db5d.mp3?file
 </audio>
 
 <audio id="win-sound"
-src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_3d4b4f6f4e.mp3?filename=bonus-collect-5934.mp3">
+src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"
+preload="auto">
 </audio>
 
+<audio
+id="tap-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3">
+</audio>
 
 <script>
+
+let usedWords = [];
+let gameEnded = false;
 
 const clickSound =
 document.getElementById("click-sound");
@@ -420,12 +476,12 @@ document.getElementById("lose-sound");
 const winSound =
 document.getElementById("win-sound");
 
-clickSound.volume = 0.10;
-correctSound.volume = 0.15;
+clickSound.volume = 0.28;   // louder tap sound
+correctSound.volume = 0.18;
 wrongSound.volume = 0.12;
 timeoutSound.volume = 0.08;
 loseSound.volume = 0.15;
-winSound.volume = 0.15;
+winSound.volume = 0.30;     // louder win sound
 const streakSound =
 document.getElementById("win-sound");
 
@@ -433,11 +489,34 @@ streakSound.volume = 0.15;
 
 const words = [
 
+/* EASY */
+
 {
 word:"apple",
 hint:"A red fruit",
 definition:"A fruit that grows on trees.",
 example:"I ate an apple."
+},
+
+{
+word:"purse",
+hint:"used to store money",
+definition:"A small bag carried in the hand.",
+example:"She kept her wallet in her purse."
+},
+
+{
+word:"car",
+hint:"used to travel",
+definition:"A vehicle with four wheels.",
+example:"He drives a car."
+},
+
+{
+word:"keyboard",
+hint:"used for typing",
+definition:"A panel of keys for inputting text into a computer.",
+example:"She types quickly on her keyboard."
 },
 
 {
@@ -455,6 +534,57 @@ example:"My teacher is kind."
 },
 
 {
+word:"school",
+hint:"Place for learning",
+definition:"A place where students study.",
+example:"The school opens at 8 AM."
+},
+
+{
+word:"garden",
+hint:"Place with flowers",
+definition:"An area used for growing plants.",
+example:"The garden looks beautiful."
+},
+
+{
+word:"window",
+hint:"Made of glass",
+definition:"An opening in a wall for light and air.",
+example:"She opened the window."
+},
+
+{
+word:"bottle",
+hint:"Used for drinking",
+definition:"A container for liquids.",
+example:"He filled the bottle with water."
+},
+
+{
+word:"doctor",
+hint:"Treats sick people",
+definition:"A medical professional.",
+example:"The doctor gave medicine."
+},
+
+{
+word:"pencil",
+hint:"Used for writing",
+definition:"A tool used for writing or drawing.",
+example:"My pencil is sharp."
+},
+
+{
+word:"rainbow",
+hint:"Appears after rain",
+definition:"A colorful arc in the sky.",
+example:"We saw a rainbow yesterday."
+},
+
+/* MEDIUM */
+
+{
 word:"astronaut",
 hint:"Travels to space",
 definition:"A person trained for space travel.",
@@ -462,12 +592,211 @@ example:"The astronaut entered the rocket."
 },
 
 {
+word:"computer",
+hint:"Electronic machine",
+definition:"A device used for processing data.",
+example:"I use a computer for coding."
+},
+
+{
+word:"elephant",
+hint:"A very large animal",
+definition:"The largest land animal.",
+example:"The elephant sprayed water."
+},
+
+{
+word:"mountain",
+hint:"Very tall landform",
+definition:"A large natural elevation of the earth.",
+example:"They climbed the mountain."
+},
+
+{
+word:"internet",
+hint:"Connects the world",
+definition:"A global computer network.",
+example:"The internet is very useful."
+},
+
+{
+word:"hospital",
+hint:"Place for patients",
+definition:"A place where people receive medical care.",
+example:"She works in a hospital."
+},
+
+{
+word:"diamond",
+hint:"Very expensive stone",
+definition:"A precious gemstone.",
+example:"The diamond sparkled brightly."
+},
+
+{
+word:"language",
+hint:"Used for communication",
+definition:"A system of words and grammar.",
+example:"English is an international language."
+},
+
+{
+word:"football",
+hint:"Popular sport",
+definition:"A game played with a ball.",
+example:"They played football after school."
+},
+
+{
+word:"airplane",
+hint:"Flies in the sky",
+definition:"A powered flying vehicle.",
+example:"The airplane landed safely."
+},
+
+/* HARD */
+
+{
 word:"psychology",
 hint:"Study of the mind",
 definition:"Science of human behavior and mind.",
 example:"She studies psychology."
-}
+},
 
+{
+word:"philosophy",
+hint:"Study of existence and thinking",
+definition:"The study of fundamental questions about life.",
+example:"He enjoys reading philosophy."
+},
+
+{
+word:"architecture",
+hint:"Designing buildings",
+definition:"The art of designing structures.",
+example:"She studies architecture."
+},
+
+{
+word:"entrepreneur",
+hint:"Starts businesses",
+definition:"A person who creates and runs businesses.",
+example:"The entrepreneur launched a startup."
+},
+
+{
+word:"encyclopedia",
+hint:"Large knowledge book",
+definition:"A book containing information on many subjects.",
+example:"He searched the encyclopedia."
+},
+
+{
+word:"communication",
+hint:"Sharing information",
+definition:"The process of exchanging ideas.",
+example:"Communication skills are important."
+},
+
+{
+word:"responsibility",
+hint:"A duty or obligation",
+definition:"Something you are expected to do.",
+example:"Cleaning the room is your responsibility."
+},
+
+{
+word:"electricity",
+hint:"Powers devices",
+definition:"A form of energy from electric charge.",
+example:"The electricity went out."
+},
+
+{
+word:"environment",
+hint:"Nature around us",
+definition:"The surroundings and natural world.",
+example:"We should protect the environment."
+},
+
+{
+word:"technology",
+hint:"Modern innovation",
+definition:"Application of scientific knowledge.",
+example:"Technology changes quickly."
+},
+
+/* VERY HARD */
+
+{
+word:"metamorphosis",
+hint:"A complete transformation",
+definition:"A major change in form or structure.",
+example:"A caterpillar undergoes metamorphosis."
+},
+
+{
+word:"microbiology",
+hint:"Study of microorganisms",
+definition:"Science dealing with microscopic organisms.",
+example:"She specializes in microbiology."
+},
+
+{
+word:"cryptocurrency",
+hint:"Digital money",
+definition:"A decentralized digital currency.",
+example:"Bitcoin is a cryptocurrency."
+},
+
+{
+word:"photosynthesis",
+hint:"Plants make food this way",
+definition:"Process plants use sunlight to create energy.",
+example:"Photosynthesis needs sunlight."
+},
+
+{
+word:"international",
+hint:"Between countries",
+definition:"Existing between nations.",
+example:"It was an international event."
+},
+
+{
+word:"biodiversity",
+hint:"Variety of living things",
+definition:"The diversity of plant and animal life.",
+example:"Forests support biodiversity."
+},
+
+{
+word:"unbelievable",
+hint:"Hard to believe",
+definition:"Something extraordinary or shocking.",
+example:"The magic trick was unbelievable."
+},
+
+{
+word:"transportation",
+hint:"Moving people or goods",
+definition:"The act of transporting something.",
+example:"Public transportation saves fuel."
+},
+
+{
+word:"extraordinary",
+hint:"Very unusual",
+definition:"Remarkable or exceptional.",
+example:"She has extraordinary talent."
+},
+
+{
+word:"misunderstanding",
+hint:"Failure to understand correctly",
+definition:"A wrong interpretation.",
+example:"It was just a misunderstanding."
+}
 ];
 
 let score = 0;
@@ -512,10 +841,14 @@ const gameContainer =
 document.getElementById("game-container");
 
 
+const tapSound =
+document.getElementById("tap-sound");
+
+tapSound.volume = 0.35;
+
   function unlockAudio(){
 
   [
-  clickSound,
   correctSound,
   wrongSound,
   timeoutSound,
@@ -534,6 +867,10 @@ document.getElementById("game-container");
     .catch(() => {});
 
   });
+
+  tapSound.pause();
+tapSound.currentTime = 0;
+tapSound.play().catch(() => {});
 
 }
 
@@ -560,6 +897,8 @@ function getDifficultyWords(){
 
 function startGame(){
 
+  gameEnded = false;
+
   guessedLetters = [];
 
   definitionBox.innerHTML = "";
@@ -567,10 +906,40 @@ function startGame(){
   const available =
   getDifficultyWords();
 
+  // REMOVE RECENTLY USED WORDS
+
+  let remainingWords =
+  available.filter(item =>
+    !usedWords.includes(item.word)
+  );
+
+  // RESET IF ALL USED
+
+  if(remainingWords.length === 0){
+
+    usedWords = [];
+
+    remainingWords = available;
+  }
+
   const selected =
-  available[
-  Math.floor(Math.random()*available.length)
+  remainingWords[
+    Math.floor(
+      Math.random() *
+      remainingWords.length
+    )
   ];
+
+  // SAVE USED WORD
+
+  usedWords.push(selected.word);
+
+  // KEEP ONLY LAST 15 WORDS
+
+  if(usedWords.length > 15){
+
+    usedWords.shift();
+  }
 
   currentWord =
   selected.word;
@@ -647,22 +1016,41 @@ function guessLetter(letter,button){
 
   button.disabled = true;
 
-clickSound.currentTime = 0;
-
-clickSound.play().catch(()=>{});
+  // SMALL KEY TAP SOUND
+  tapSound.pause();
+  tapSound.currentTime = 0;
+  tapSound.play().catch(()=>{});
 
   if(currentWord.includes(letter)){
 
     button.classList.add("correct");
 
-    correctSound.currentTime = 0;
-    correctSound.play();
+guessedLetters.push(letter);
 
-    guessedLetters.push(letter);
+renderWord();
 
-    renderWord();
+/* CHECK IF THIS LETTER FINISHES THE WORD */
 
-    checkWin();
+const uniqueLetters =
+[...new Set(currentWord.split(""))];
+
+const won =
+uniqueLetters.every(l =>
+guessedLetters.includes(l));
+
+if(won){
+
+  checkWin();
+
+}
+
+else{
+
+  correctSound.currentTime = 0;
+
+  correctSound.play().catch(()=>{});
+
+}
 
   }
 
@@ -670,8 +1058,9 @@ clickSound.play().catch(()=>{});
 
     button.classList.add("wrong");
 
+    wrongSound.pause();
     wrongSound.currentTime = 0;
-    wrongSound.play();
+    wrongSound.play().catch(()=>{});
 
     hearts--;
 
@@ -705,30 +1094,45 @@ function checkWin(){
 
   if(won){
 
-    clearInterval(timerInterval);
+gameContainer.classList.add("correct-flash");
 
-    gameContainer.classList.add("correct-flash");
+setTimeout(() => {
 
-    setTimeout(() => {
+  gameContainer.classList.remove("correct-flash");
 
-      gameContainer.classList.remove("correct-flash");
+},450);
 
-    },450);
+/* WIN SOUND */
 
-    streak++;
+winSound.pause();
+
+winSound.currentTime = 0;
+
+winSound.volume = 0.45;
+
+const playPromise = winSound.play();
+
+if(playPromise !== undefined){
+
+  playPromise.catch(err => {
+
+    console.log("Win sound failed:", err);
+
+  });
+
+}
+
+streak++;
 
     streakElement.textContent =
     `🔥 Streak x${streak}`;
 
-    if(streak >= 3){
+if(streak >= 3){
 
-      coins += 2;
+  coins += 2;
 
-      streakSound.currentTime = 0;
-      streakSound.play();
-
-      launchConfetti();
-    }
+  launchConfetti();
+}
 
     if(streak >= 5){
 
@@ -767,6 +1171,12 @@ function checkWin(){
 
 function revealLetter(){
 
+  // STOP IF GAME ENDED
+
+  if(gameEnded){
+    return;
+  }
+
   if(coins < 5){
 
     alert("Not enough coins!");
@@ -778,7 +1188,7 @@ function revealLetter(){
   currentWord
   .split("")
   .filter(letter =>
-  !guessedLetters.includes(letter));
+    !guessedLetters.includes(letter));
 
   if(hiddenLetters.length === 0){
     return;
@@ -786,7 +1196,10 @@ function revealLetter(){
 
   const randomLetter =
   hiddenLetters[
-  Math.floor(Math.random()*hiddenLetters.length)
+    Math.floor(
+      Math.random() *
+      hiddenLetters.length
+    )
   ];
 
   guessedLetters.push(randomLetter);
@@ -871,11 +1284,13 @@ timeoutSound.play().catch(()=>{});
 
 function endGame(){
 
+  gameEnded = true;
+
   clearInterval(timerInterval);
 
   loseSound.currentTime = 0;
 
-loseSound.play().catch(()=>{});
+  loseSound.play().catch(()=>{});
 
   document.getElementById("game-over")
   .style.display = "block";
