@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hangman Game</title>
+
+<style>
+
+:root{
+  --primary:#0e257a;
+  --secondary:#F3BE7A;
+  --accent:#FFC81E;
+  --bg:#5E7AC4;
+  --card:#ffffff;
+  --text:#12233c;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Inter,sans-serif;
+  background:
+  radial-gradient(
+    circle at top left,
+    #12233c 0%,
+    #800040 40%,
+    #c300ff 100%
+  );
+
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.game-container{
+  width:100%;
+  max-width:700px;
+  background:white;
+  border-radius:28px;
+  padding:2rem;
+  box-shadow:0 20px 50px rgba(0,0,0,0.15);
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.back-btn{
+  position:absolute;
+  top:20px;
+  left:20px;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:white;
+  color:var(--primary);
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.4rem;
+  font-weight:700;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+h1{
+  color:var(--primary);
+  margin-bottom:1rem;
+}
+
+.top-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:1rem;
+  flex-wrap:wrap;
+  margin-bottom:1.5rem;
+}
+
+.stat{
+  font-weight:700;
+}
+
+.hearts{
+  display:flex;
+  gap:0.4rem;
+  font-size:1.4rem;
+}
+
+.heart.lost{
+  opacity:0.3;
+  transform:scale(0.8);
+}
+
+.hint{
+  margin-top:1rem;
+  color:#666;
+  font-weight:600;
+}
+
+.word-display{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:12px;
+  margin:2rem 0;
+}
+
+.letter-box{
+  width:48px;
+  height:58px;
+  border-radius:14px;
+  background:#f4f4f4;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:1.8rem;
+  font-weight:800;
+  color:var(--primary);
+}
+
+.keyboard{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:12px;
+  margin-top:2rem;
+}
+
+.key{
+  padding:1rem;
+  border:none;
+  border-radius:14px;
+  background:var(--primary);
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.2s;
+  font-size:1rem;
+}
+
+.key:hover{
+  transform:translateY(-2px);
+}
+
+.key.correct{
+  background:#2a9d50;
+}
+
+.key.wrong{
+  background:#d62828;
+}
+
+.key:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+
+.reveal-btn{
+  margin-top:1.5rem;
+  padding:1rem 1.4rem;
+  border:none;
+  border-radius:14px;
+  background:var(--secondary);
+  color:var(--primary);
+  font-weight:800;
+  cursor:pointer;
+  font-size:1rem;
+}
+
+.streak{
+  margin-top:1rem;
+  color:#ff7b00;
+  font-weight:800;
+}
+
+.definition-box{
+  margin-top:1.5rem;
+  line-height:1.7;
+  color:#444;
+}
+
+.correct-flash{
+  animation:correctFlash 0.45s;
+}
+
+.wrong-shake{
+  animation:shake 0.45s;
+}
+
+@keyframes correctFlash{
+
+  0%{
+    background:#b7ffb7;
+  }
+
+  100%{
+    background:white;
+  }
+
+}
+
+@keyframes shake{
+
+  0%,100%{
+    transform:translateX(0);
+  }
+
+  20%{
+    transform:translateX(-10px);
+  }
+
+  40%{
+    transform:translateX(10px);
+  }
+
+  60%{
+    transform:translateX(-8px);
+  }
+
+  80%{
+    transform:translateX(8px);
+  }
+
+}
+
+#countdown-screen{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  cursor:pointer;
+}
+
+#countdown-number{
+  font-size:7rem;
+  font-weight:900;
+  color:white;
+}
+
+.count-animate{
+  animation:pop 0.9s ease;
+}
+
+@keyframes pop{
+
+  0%{
+    transform:scale(0.7);
+    opacity:0;
+  }
+
+  60%{
+    transform:scale(1.08);
+    opacity:1;
+  }
+
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+}
+
+.game-over{
+  display:none;
+}
+
+#confetti{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+@media(max-width:600px){
+
+  .keyboard{
+    grid-template-columns:repeat(5,1fr);
+  }
+
+  .letter-box{
+    width:42px;
+    height:52px;
+    font-size:1.5rem;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<div id="countdown-screen">
+  <div id="countdown-number">
+    TAP TO START
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<div class="game-container" id="game-container">
+
+<a href="HomePage.html" class="back-btn">
+←
+</a>
+
+<h1>🎯 Hangman</h1>
+
+<div class="top-bar">
+
+<div class="stat">
+⭐ Coins:
+<span id="coins">0</span>
+</div>
+
+<div class="stat">
+🏆 Score:
+<span id="score">0</span>
+</div>
+
+<div class="stat">
+📈 Level:
+<span id="level">1</span>
+</div>
+
+<div class="stat">
+⏳
+<span id="time">--</span>
+</div>
+
+<div class="hearts" id="hearts">
+<span class="heart">❤️</span>
+<span class="heart">❤️</span>
+<span class="heart">❤️</span>
+</div>
+
+</div>
+
+<div class="hint" id="hint">
+Hint goes here
+</div>
+
+<div class="word-display" id="word-display"></div>
+
+<div class="streak" id="streak">
+🔥 Streak x0
+</div>
+
+<button class="reveal-btn" onclick="revealLetter()">
+💡 Reveal Letter (-5 Coins)
+</button>
+
+<div class="keyboard" id="keyboard"></div>
+
+<div class="definition-box" id="definition-box"></div>
+
+<div class="game-over" id="game-over">
+
+<h2>Game Over!</h2>
+
+<h1 id="final-score">0</h1>
+
+<button class="reveal-btn" onclick="restartGame()">
+Play Again
+</button>
+
+</div>
+
+</div>
+
+<audio id="click-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3">
+</audio>
+
+<audio id="correct-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3">
+</audio>
+
+<audio id="wrong-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3">
+</audio>
+
+<audio id="timeout-sound"
+src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_2f814eac1f.mp3?filename=clock-ticking-2-104806.mp3">
+</audio>
+
+<audio id="lose-sound"
+src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0e6c2db5d.mp3?filename=negative_beeps-6008.mp3">
+</audio>
+
+<audio id="win-sound"
+src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_3d4b4f6f4e.mp3?filename=bonus-collect-5934.mp3">
+</audio>
+
+
+<script>
+
+const clickSound =
+document.getElementById("click-sound");
+
+const correctSound =
+document.getElementById("correct-sound");
+
+const wrongSound =
+document.getElementById("wrong-sound");
+
+const timeoutSound =
+document.getElementById("timeout-sound");
+
+const loseSound =
+document.getElementById("lose-sound");
+
+const winSound =
+document.getElementById("win-sound");
+
+clickSound.volume = 0.10;
+correctSound.volume = 0.15;
+wrongSound.volume = 0.12;
+timeoutSound.volume = 0.08;
+loseSound.volume = 0.15;
+winSound.volume = 0.15;
+const streakSound =
+document.getElementById("win-sound");
+
+streakSound.volume = 0.15;
+
+const words = [
+
+{
+word:"apple",
+hint:"A red fruit",
+definition:"A fruit that grows on trees.",
+example:"I ate an apple."
+},
+
+{
+word:"banana",
+hint:"A yellow fruit",
+definition:"A long curved fruit.",
+example:"Bananas are rich in potassium."
+},
+
+{
+word:"teacher",
+hint:"Works at school",
+definition:"A person who teaches students.",
+example:"My teacher is kind."
+},
+
+{
+word:"astronaut",
+hint:"Travels to space",
+definition:"A person trained for space travel.",
+example:"The astronaut entered the rocket."
+},
+
+{
+word:"psychology",
+hint:"Study of the mind",
+definition:"Science of human behavior and mind.",
+example:"She studies psychology."
+}
+
+];
+
+let score = 0;
+let level = 1;
+let hearts = 3;
+let coins = 0;
+let streak = 0;
+
+let currentWord = "";
+let guessedLetters = [];
+let timer;
+let timerInterval;
+
+const scoreElement =
+document.getElementById("score");
+
+const levelElement =
+document.getElementById("level");
+
+const coinsElement =
+document.getElementById("coins");
+
+const wordDisplay =
+document.getElementById("word-display");
+
+const hintElement =
+document.getElementById("hint");
+
+const keyboard =
+document.getElementById("keyboard");
+
+const streakElement =
+document.getElementById("streak");
+
+const timeElement =
+document.getElementById("time");
+
+const definitionBox =
+document.getElementById("definition-box");
+
+const gameContainer =
+document.getElementById("game-container");
+
+
+  function unlockAudio(){
+
+  [
+  clickSound,
+  correctSound,
+  wrongSound,
+  timeoutSound,
+  loseSound,
+  winSound
+  ]
+  .forEach(sound => {
+
+    sound.play()
+    .then(() => {
+
+      sound.pause();
+      sound.currentTime = 0;
+
+    })
+    .catch(() => {});
+
+  });
+
+}
+
+function getDifficultyWords(){
+
+  if(level <= 3){
+
+    return words.slice(0,2);
+
+  }
+
+  else if(level <= 6){
+
+    return words.slice(0,3);
+
+  }
+
+  else{
+
+    return words;
+  }
+
+}
+
+function startGame(){
+
+  guessedLetters = [];
+
+  definitionBox.innerHTML = "";
+
+  const available =
+  getDifficultyWords();
+
+  const selected =
+  available[
+  Math.floor(Math.random()*available.length)
+  ];
+
+  currentWord =
+  selected.word;
+
+  hintElement.textContent =
+  "💡 Hint: " + selected.hint;
+
+  renderWord();
+
+  renderKeyboard();
+
+  startTimer();
+
+}
+
+function renderWord(){
+
+  wordDisplay.innerHTML = "";
+
+  currentWord.split("")
+  .forEach(letter => {
+
+    const box =
+    document.createElement("div");
+
+    box.classList.add("letter-box");
+
+    if(guessedLetters.includes(letter)){
+
+      box.textContent = letter.toUpperCase();
+
+    }
+
+    else{
+
+      box.textContent = "_";
+
+    }
+
+    wordDisplay.appendChild(box);
+
+  });
+
+}
+
+function renderKeyboard(){
+
+  keyboard.innerHTML = "";
+
+  const letters =
+  "abcdefghijklmnopqrstuvwxyz";
+
+  letters.split("")
+  .forEach(letter => {
+
+    const btn =
+    document.createElement("button");
+
+    btn.classList.add("key");
+
+    btn.textContent =
+    letter.toUpperCase();
+
+    btn.onclick =
+    () => guessLetter(letter,btn);
+
+    keyboard.appendChild(btn);
+
+  });
+
+}
+
+function guessLetter(letter,button){
+
+  button.disabled = true;
+
+clickSound.currentTime = 0;
+
+clickSound.play().catch(()=>{});
+
+  if(currentWord.includes(letter)){
+
+    button.classList.add("correct");
+
+    correctSound.currentTime = 0;
+    correctSound.play();
+
+    guessedLetters.push(letter);
+
+    renderWord();
+
+    checkWin();
+
+  }
+
+  else{
+
+    button.classList.add("wrong");
+
+    wrongSound.currentTime = 0;
+    wrongSound.play();
+
+    hearts--;
+
+    updateHearts();
+
+    gameContainer.classList.add("wrong-shake");
+
+    setTimeout(() => {
+
+      gameContainer.classList.remove("wrong-shake");
+
+    },450);
+
+    if(hearts <= 0){
+
+      endGame();
+    }
+
+  }
+
+}
+
+function checkWin(){
+
+  const uniqueLetters =
+  [...new Set(currentWord.split(""))];
+
+  const won =
+  uniqueLetters.every(letter =>
+  guessedLetters.includes(letter));
+
+  if(won){
+
+    clearInterval(timerInterval);
+
+    gameContainer.classList.add("correct-flash");
+
+    setTimeout(() => {
+
+      gameContainer.classList.remove("correct-flash");
+
+    },450);
+
+    streak++;
+
+    streakElement.textContent =
+    `🔥 Streak x${streak}`;
+
+    if(streak >= 3){
+
+      coins += 2;
+
+      streakSound.currentTime = 0;
+      streakSound.play();
+
+      launchConfetti();
+    }
+
+    if(streak >= 5){
+
+      coins += 5;
+    }
+
+    score++;
+
+    level++;
+
+    scoreElement.textContent = score;
+    levelElement.textContent = level;
+    coinsElement.textContent = coins;
+
+    const selected =
+    words.find(w => w.word === currentWord);
+
+    definitionBox.innerHTML = `
+    <h3>${selected.word.toUpperCase()}</h3>
+    <p><strong>Definition:</strong>
+    ${selected.definition}</p>
+
+    <p><strong>Example:</strong>
+    ${selected.example}</p>
+    `;
+
+    setTimeout(() => {
+
+      startGame();
+
+    },2500);
+
+  }
+
+}
+
+function revealLetter(){
+
+  if(coins < 5){
+
+    alert("Not enough coins!");
+
+    return;
+  }
+
+  const hiddenLetters =
+  currentWord
+  .split("")
+  .filter(letter =>
+  !guessedLetters.includes(letter));
+
+  if(hiddenLetters.length === 0){
+    return;
+  }
+
+  const randomLetter =
+  hiddenLetters[
+  Math.floor(Math.random()*hiddenLetters.length)
+  ];
+
+  guessedLetters.push(randomLetter);
+
+  coins -= 5;
+
+  coinsElement.textContent = coins;
+
+  renderWord();
+
+  checkWin();
+
+}
+
+function updateHearts(){
+
+  const heartSpans =
+  document.querySelectorAll(".heart");
+
+  heartSpans.forEach((heart,index) => {
+
+    if(index >= hearts){
+
+      heart.classList.add("lost");
+    }
+
+  });
+
+}
+
+function startTimer(){
+
+  clearInterval(timerInterval);
+
+  if(level <= 3){
+
+    timeElement.textContent = "--";
+
+    return;
+  }
+
+  timer =
+  level >= 8 ? 15 : 20;
+
+  timeElement.textContent =
+  timer;
+
+  timerInterval =
+  setInterval(() => {
+
+    timer--;
+
+    timeElement.textContent =
+    timer;
+
+    if(timer <= 0){
+
+      clearInterval(timerInterval);
+timeoutSound.currentTime = 0;
+
+timeoutSound.play().catch(()=>{});
+      hearts--;
+
+      updateHearts();
+
+      if(hearts <= 0){
+
+        endGame();
+
+      }
+
+      else{
+
+        startGame();
+      }
+
+    }
+
+  },1000);
+
+}
+
+function endGame(){
+
+  clearInterval(timerInterval);
+
+  loseSound.currentTime = 0;
+
+loseSound.play().catch(()=>{});
+
+  document.getElementById("game-over")
+  .style.display = "block";
+
+  document.getElementById("final-score")
+  .textContent = score;
+
+  keyboard.innerHTML = "";
+
+}
+
+function restartGame(){
+
+  score = 0;
+  level = 1;
+  hearts = 3;
+  coins = 0;
+  streak = 0;
+
+  scoreElement.textContent = score;
+  levelElement.textContent = level;
+  coinsElement.textContent = coins;
+
+  streakElement.textContent =
+  "🔥 Streak x0";
+
+  document.getElementById("game-over")
+  .style.display = "none";
+
+  document.querySelectorAll(".heart")
+  .forEach(h => h.classList.remove("lost"));
+
+  startGame();
+
+}
+
+function launchConfetti(){
+
+  const canvas =
+  document.getElementById("confetti");
+
+  const ctx =
+  canvas.getContext("2d");
+
+  canvas.width =
+  window.innerWidth;
+
+  canvas.height =
+  window.innerHeight;
+
+  const pieces = [];
+
+  for(let i=0;i<120;i++){
+
+    pieces.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height-canvas.height,
+      r:Math.random()*6+2,
+      d:Math.random()*120
+    });
+
+  }
+
+  let angle = 0;
+
+  function draw(){
+
+    ctx.clearRect(
+    0,0,canvas.width,canvas.height
+    );
+
+    for(let i=0;i<pieces.length;i++){
+
+      const p = pieces[i];
+
+      ctx.beginPath();
+
+      ctx.arc(
+      p.x,p.y,p.r,
+      0,Math.PI*2
+      );
+
+      ctx.fillStyle =
+ctx.fillStyle = "#ffffff";
+
+      ctx.fill();
+
+    }
+
+    update();
+
+  }
+
+  function update(){
+
+    angle += 0.01;
+
+    for(let i=0;i<pieces.length;i++){
+
+      const p = pieces[i];
+
+      p.y +=
+      Math.cos(angle+p.d)+3;
+
+      p.x +=
+      Math.sin(angle);
+
+      if(p.y > canvas.height){
+
+        p.y = -10;
+      }
+
+    }
+
+  }
+
+  const animation =
+  setInterval(draw,20);
+
+  setTimeout(() => {
+
+    clearInterval(animation);
+
+    ctx.clearRect(
+    0,0,canvas.width,canvas.height
+    );
+
+  },2500);
+
+}
+
+function startCountdown(){
+
+  let count = 3;
+
+  const countdownNumber =
+  document.getElementById("countdown-number");
+
+  const countdownScreen =
+  document.getElementById("countdown-screen");
+
+  function animate(text){
+
+    countdownNumber.classList.remove("count-animate");
+
+    void countdownNumber.offsetWidth;
+
+    countdownNumber.textContent = text;
+
+    countdownNumber.classList.add("count-animate");
+
+  }
+
+  animate(count);
+
+  const interval =
+  setInterval(() => {
+
+    count--;
+
+    if(count > 0){
+
+      animate(count);
+
+    }
+
+    else if(count === 0){
+
+      animate("GO!");
+
+    }
+
+    else{
+
+      clearInterval(interval);
+
+      setTimeout(() => {
+
+        countdownScreen.style.display =
+        "none";
+
+        startGame();
+
+      },700);
+
+    }
+
+  },1000);
+
+}
+
+document
+.getElementById("countdown-screen")
+.addEventListener("click",() => {
+
+  unlockAudio();
+
+  startCountdown();
+
+},{
+  once:true
+});
+
+</script>
+
+</body>
+</html>

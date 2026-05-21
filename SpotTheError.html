@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spot The Error</title>
+
+<style>
+
+:root{
+  --primary:#0e257a;
+  --secondary:#F3BE7A;
+  --accent:#FFC81E;
+  --bg:#5E7AC4;
+  --card:#ffffff;
+  --text:#12233c;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Inter,sans-serif;
+  background:radial-gradient(circle at top left,#12233c 0%,#175385 40%,#00163a 100%);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.game-container{
+  width:100%;
+  max-width:700px;
+  background:white;
+  border-radius:28px;
+  padding:2rem;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,0.15);
+  position:relative;
+  overflow:hidden;
+}
+
+.back-btn{
+  position:absolute;
+  top:20px;
+  left:20px;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:white;
+  color:var(--primary);
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.4rem;
+  font-weight:700;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+h1{
+  color:var(--primary);
+  margin-bottom:1rem;
+}
+
+.top-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1.5rem;
+  flex-wrap:wrap;
+  gap:1rem;
+}
+
+.score,
+.level,
+.timer{
+  font-weight:700;
+}
+
+.hearts{
+  display:flex;
+  gap:0.4rem;
+  font-size:1.5rem;
+}
+
+.heart.lost{
+  opacity:0.25;
+  transform:scale(0.8);
+}
+
+.sentence{
+  font-size:1.7rem;
+  font-weight:700;
+  line-height:1.8;
+  margin:2rem 0;
+}
+
+.word{
+  display:inline-block;
+  margin:0.2rem;
+  padding:0.3rem 0.6rem;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.word:hover{
+  background:#ffe7b8;
+}
+
+.selected{
+  background:var(--secondary);
+}
+
+.options{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  margin-top:24px;
+  width:100%;
+}
+
+.option-btn{
+  padding:1.1rem;
+  border:none;
+  border-radius:14px;
+  background:var(--primary);
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.2s;
+  min-height:64px;
+font-size:1rem;
+line-height:1.4;
+}
+
+.option-btn:hover{
+  transform:translateY(-2px);
+}
+
+input{
+  width:100%;
+  padding:1rem;
+  border-radius:14px;
+  border:2px solid #ddd;
+  font-size:1rem;
+  margin-top:1rem;
+  outline:none;
+}
+
+input:focus{
+  border-color:var(--primary);
+}
+
+.submit-btn{
+  margin-top:1rem;
+  padding:1rem 1.5rem;
+  border:none;
+  border-radius:14px;
+  background:var(--primary);
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.feedback{
+  margin-top:1rem;
+  font-weight:700;
+  min-height:30px;
+}
+
+.correct{
+  color:green;
+}
+
+.wrong{
+  color:#d62828;
+}
+
+.correct-flash{
+  animation:correctFlash 0.45s;
+}
+
+.wrong-shake{
+  animation:shake 0.45s;
+}
+
+@keyframes correctFlash{
+  0%{
+    background:#b7ffb7;
+  }
+
+  100%{
+    background:white;
+  }
+}
+
+@keyframes shake{
+  0%,100%{
+    transform:translateX(0);
+  }
+
+  20%{
+    transform:translateX(-10px);
+  }
+
+  40%{
+    transform:translateX(10px);
+  }
+
+  60%{
+    transform:translateX(-8px);
+  }
+
+  80%{
+    transform:translateX(8px);
+  }
+}
+
+#countdown-screen{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  cursor:pointer;
+}
+
+#countdown-number{
+  font-size:7rem;
+  color:white;
+  font-weight:900;
+}
+
+.count-animate{
+  animation:pop 0.9s ease;
+}
+
+@keyframes pop{
+  0%{
+    transform:scale(0.7);
+    opacity:0;
+  }
+
+  60%{
+    transform:scale(1.08);
+    opacity:1;
+  }
+
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+#confetti{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+.game-over{
+  display:none;
+}
+
+.game-over h2{
+  color:#d62828;
+  margin-bottom:1rem;
+}
+
+.explanation{
+  margin-top:1rem;
+  color:#555;
+  line-height:1.6;
+}
+
+.share-btn{
+  margin-top:1rem;
+  background:#1d9bf0;
+}
+
+.motivation{
+  margin-top:1rem;
+  color:var(--primary);
+  font-weight:700;
+}
+
+.timer-warning{
+  color:red;
+  transform:scale(1.1);
+}
+
+@media(max-width:600px){
+
+  .sentence{
+    font-size:1.3rem;
+  }
+
+  .options{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<div id="countdown-screen">
+  <div id="countdown-number">TAP TO START</div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<div class="game-container" id="game-container">
+
+<a href="HomePage.html" class="back-btn">
+←
+</a>
+
+<div id="game-area">
+
+<h1>🔍 Spot The Error</h1>
+
+<div class="top-bar">
+
+<div class="score">
+Score:
+<span id="score">0</span>
+</div>
+
+<div class="level">
+Level:
+<span id="level">1</span>
+</div>
+
+<div class="timer" id="timer-box">
+⏳
+<span id="time">20</span>s
+</div>
+
+<div class="hearts" id="hearts">
+<span class="heart">❤️</span>
+<span class="heart">❤️</span>
+<span class="heart">❤️</span>
+</div>
+
+</div>
+
+<div class="sentence" id="sentence"></div>
+<p id="instruction-text"
+style="
+margin-top:-10px;
+margin-bottom:20px;
+color:#666;
+font-weight:600;
+">
+Click the incorrect word.
+</p>
+<div id="multiple-choice-area"></div>
+
+<div id="typing-area" style="display:none;">
+
+<input
+type="text"
+id="correction-input"
+placeholder="Type correction">
+
+<button class="submit-btn" onclick="submitCorrection()">
+Submit
+</button>
+
+</div>
+
+<div class="feedback" id="feedback"></div>
+
+<div class="motivation" id="motivation"></div>
+
+</div>
+
+<div class="game-over" id="game-over">
+
+<h2>Game Over!</h2>
+
+<p>Your Score</p>
+
+<h1 id="final-score">0</h1>
+
+<div class="explanation" id="explanation"></div>
+
+<button class="submit-btn" onclick="restartGame()">
+Play Again
+</button>
+
+<button class="submit-btn share-btn" onclick="shareScore()">
+Share Score
+</button>
+
+</div>
+
+</div>
+
+<audio id="click-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3">
+</audio>
+
+<audio id="correct-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3">
+</audio>
+
+<audio id="wrong-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3">
+</audio>
+
+<audio id="streak-sound"
+src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3">
+</audio>
+
+<audio id="timeout-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3">
+</audio>
+
+<audio id="lose-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2220/2220-preview.mp3">
+</audio>
+
+
+
+<script>
+
+
+const clickSound =
+document.getElementById("click-sound");
+
+const loseSound =
+document.getElementById("lose-sound");
+
+clickSound.volume = 0.08;
+loseSound.volume = 0.15;
+
+const questions = [
+
+{
+sentence:"She do not like apples.",
+wrong:["do"],
+answers:["does"],
+explanation:"'She' uses 'does', not 'do'.",
+options:["do","does","did","done"]
+},
+
+{
+sentence:"He are playing football.",
+wrong:["are"],
+answers:["is"],
+explanation:"'He' uses 'is', not 'are'.",
+options:["are","is","am","be"]
+},
+
+{
+sentence:"They was happy yesterday.",
+wrong:["was"],
+answers:["were"],
+explanation:"'They' uses 'were', not 'was'.",
+options:["was","were","is","be"]
+},
+
+{
+sentence:"I goed to school yesterday.",
+wrong:["goed"],
+answers:["went"],
+explanation:"Past tense of go is went.",
+options:["goed","went","goes","gone"]
+},
+
+{
+sentence:"She don't likes coffee.",
+wrong:["don't"],
+answers:["doesn't"],
+explanation:"'She' uses 'doesn't'.",
+options:["don't","doesn't","didn't","not"]
+},
+
+{
+sentence:"He go to school and eat lunch yesterday.",
+wrong:["go","eat"],
+answers:["went","ate"],
+explanation:"Past tense needed: went and ate.",
+options:["went","ate","goes","eated"]
+}
+
+];
+
+let score = 0;
+let level = 1;
+let hearts = 3;
+let streak = 0;
+let currentQuestion;
+let selectedWord = null;
+let correctedWords = [];
+
+let timer = 20;
+let timerInterval;
+
+const gameContainer =
+document.getElementById("game-container");
+
+const sentenceElement =
+document.getElementById("sentence");
+
+const feedback =
+document.getElementById("feedback");
+
+const typingArea =
+document.getElementById("typing-area");
+
+const correctionInput =
+document.getElementById("correction-input");
+
+const multipleChoiceArea =
+document.getElementById("multiple-choice-area");
+
+const scoreElement =
+document.getElementById("score");
+
+const levelElement =
+document.getElementById("level");
+
+const timeElement =
+document.getElementById("time");
+
+const heartsElement =
+document.getElementById("hearts");
+
+const motivation =
+document.getElementById("motivation");
+
+const timerBox =
+document.getElementById("timer-box");
+
+const correctSound =
+document.getElementById("correct-sound");
+
+const wrongSound =
+document.getElementById("wrong-sound");
+
+const streakSound =
+document.getElementById("streak-sound");
+
+const timeoutSound =
+document.getElementById("timeout-sound");
+
+correctSound.volume = 0.12;
+wrongSound.volume = 0.10;
+streakSound.volume = 0.10;
+timeoutSound.volume = 0.08;
+
+function unlockAudio(){
+
+  const sounds = [
+    clickSound,
+    correctSound,
+    wrongSound,
+    streakSound,
+    timeoutSound,
+    loseSound
+  ];
+
+  sounds.forEach(sound => {
+
+    sound.volume = sound.volume;
+
+    const playPromise = sound.play();
+
+    if(playPromise !== undefined){
+
+      playPromise.then(() => {
+
+        sound.pause();
+        sound.currentTime = 0;
+
+      }).catch(() => {});
+
+    }
+
+  });
+
+}
+
+function getQuestion(){
+
+  clearInterval(timerInterval);
+
+  feedback.textContent = "";
+  motivation.textContent = "";
+  selectedWord = null;
+  correctedWords = [];
+  timerBox.classList.remove("timer-warning");
+
+let availableQuestions;
+
+// LEVELS 1-5
+// ONLY SINGLE ERROR QUESTIONS
+if(level <= 5){
+
+  availableQuestions =
+  questions.filter(q => q.wrong.length === 1);
+
+}
+
+// LEVEL 6+
+// MULTI ERROR QUESTIONS ALLOWED
+else{
+
+  availableQuestions = questions;
+
+}
+
+currentQuestion =
+availableQuestions[
+Math.floor(Math.random()*availableQuestions.length)
+];
+
+  renderSentence();
+
+  if(level <= 3){
+
+    renderMultipleChoice();
+
+  } else {
+
+    multipleChoiceArea.innerHTML = "";
+  }
+
+  if(level > 3){
+
+    startTimer();
+
+  } else {
+
+    timeElement.textContent = "--";
+
+  }
+
+}
+
+function renderSentence(){
+
+  sentenceElement.innerHTML = "";
+
+  const words =
+  currentQuestion.sentence.split(" ");
+
+  words.forEach(word => {
+
+    const span =
+    document.createElement("span");
+
+    span.classList.add("word");
+
+    span.textContent = word;
+
+    // EVERY WORD CLICKABLE
+    span.onclick = () => selectWord(word,span);
+
+    sentenceElement.appendChild(span);
+
+  });
+
+}
+
+function renderMultipleChoice(){
+
+  multipleChoiceArea.innerHTML = "";
+
+}
+
+function selectWord(word,element){
+
+  document.querySelectorAll(".word")
+  .forEach(w => w.classList.remove("selected"));
+
+  element.classList.add("selected");
+clickSound.pause();
+
+clickSound.currentTime = 0;
+
+clickSound.play().catch(() => {});
+  selectedWord =
+  word.replace(/[.,!?]/g,"");
+
+  // LEVELS 1-3
+  // SHOW OPTIONS ONLY AFTER SELECTING WORD
+  if(level <= 3){
+
+    multipleChoiceArea.innerHTML = "";
+
+    currentQuestion.options.forEach(option => {
+
+      const btn =
+      document.createElement("button");
+
+      btn.classList.add("option-btn");
+
+      btn.textContent = option;
+
+      btn.onclick = () => {
+
+        correctionInput.value = option;
+
+        submitCorrection();
+      };
+
+      multipleChoiceArea.appendChild(btn);
+
+    });
+
+    typingArea.style.display = "none";
+  }
+
+  // LEVEL 4+
+  else{
+
+    multipleChoiceArea.innerHTML = "";
+
+    typingArea.style.display = "block";
+
+    correctionInput.focus();
+  }
+
+}
+
+function submitCorrection(){
+
+  if(!selectedWord){
+
+    feedback.textContent =
+    "Select a word first.";
+
+    feedback.className =
+    "feedback wrong";
+
+    return;
+  }
+
+  const input =
+  correctionInput.value
+  .trim()
+  .toLowerCase();
+
+  const cleanSelected =
+  selectedWord.replace(/[.,!?]/g,"");
+
+  const index =
+  currentQuestion.wrong.indexOf(cleanSelected);
+
+  // USER CLICKED WRONG WORD
+  if(index === -1){
+
+    feedback.textContent =
+    "That's not the incorrect word.";
+
+    feedback.className =
+    "feedback wrong";
+
+    handleWrong();
+
+    return;
+  }
+
+  // USER CORRECTED PROPERLY
+  if(input === currentQuestion.answers[index]){
+
+    feedback.textContent =
+    "Correct!";
+
+    feedback.className =
+    "feedback correct";
+
+    correctedWords.push(cleanSelected);
+
+    // MULTI ERROR LEVELS
+    if(level >= 6){
+
+      // MARK WORD AS FIXED
+      document.querySelectorAll(".word")
+      .forEach(wordEl => {
+
+        if(
+          wordEl.textContent.replace(/[.,!?]/g,"")
+          === cleanSelected
+        ){
+
+          wordEl.style.background =
+          "#b7ffb7";
+
+          wordEl.style.pointerEvents =
+          "none";
+        }
+
+      });
+
+      correctionInput.value = "";
+      selectedWord = null;
+
+      // CHECK IF ALL FIXED
+      if(
+        correctedWords.length
+        === currentQuestion.wrong.length
+      ){
+
+        handleCorrect();
+      }
+
+    } else {
+
+      handleCorrect();
+    }
+
+  }
+
+  // WRONG CORRECTION
+  else {
+
+    feedback.textContent =
+    "Wrong correction.";
+
+    feedback.className =
+    "feedback wrong";
+
+    handleWrong();
+  }
+
+}
+
+function handleCorrect(){
+
+  clearInterval(timerInterval);
+
+correctSound.pause();
+
+correctSound.currentTime = 0;
+
+correctSound.play()
+.catch(() => {});
+
+  gameContainer.classList.add("correct-flash");
+
+  setTimeout(() => {
+    gameContainer.classList.remove("correct-flash");
+  },450);
+
+  streak++;
+
+  if(streak >= 3){
+
+  streakSound.pause();
+
+streakSound.currentTime = 0;
+
+streakSound.play()
+.catch(() => {});
+
+    launchConfetti();
+  }
+
+  let points = 1;
+
+  if(streak >= 3){
+    points = 2;
+  }
+
+  if(streak >= 5){
+    points = 3;
+  }
+
+  score += points;
+
+  level++;
+
+  scoreElement.textContent = score;
+  levelElement.textContent = level;
+
+  typingArea.style.display = "none";
+  correctionInput.value = "";
+
+  const messages = [
+    "Sharp eyes!",
+    "Grammar genius!",
+    "Too easy for you!",
+    "Perfect catch!"
+  ];
+
+  motivation.textContent =
+  messages[Math.floor(Math.random()*messages.length)];
+
+  setTimeout(() => {
+
+    getQuestion();
+
+  },700);
+
+}
+
+function handleWrong(){
+
+  clearInterval(timerInterval);
+
+  streak = 0;
+
+  hearts--;
+
+  updateHearts();
+
+  gameContainer.classList.add("wrong-shake");
+
+  setTimeout(() => {
+
+    gameContainer.classList.remove("wrong-shake");
+
+  },450);
+
+  // LAST HEART LOST
+  if(hearts <= 0){
+
+    loseSound.pause();
+    loseSound.currentTime = 0;
+
+    loseSound.play().catch(() => {});
+
+    endGame();
+
+  }
+
+  // NORMAL WRONG ANSWER
+  else{
+
+    wrongSound.pause();
+    wrongSound.currentTime = 0;
+
+    wrongSound.play().catch(() => {});
+
+    setTimeout(() => {
+
+      getQuestion();
+
+    },700);
+
+  }
+
+}
+
+function updateHearts(){
+
+  const heartSpans =
+  document.querySelectorAll(".heart");
+
+  heartSpans.forEach((heart,index) => {
+
+    if(index >= hearts){
+
+      heart.classList.add("lost");
+    }
+
+  });
+
+}
+
+function startTimer(){
+
+  timer = 20;
+
+  timeElement.textContent = timer;
+
+  timerInterval = setInterval(() => {
+
+    timer--;
+
+    timeElement.textContent = timer;
+
+if(timer <= 5){
+
+  timerBox.classList.add("timer-warning");
+
+  if(timer > 0){
+
+    timeoutSound.pause();
+    timeoutSound.currentTime = 0;
+
+    timeoutSound.play().catch(() => {});
+  }
+
+}
+
+    if(timer <= 0){
+
+      clearInterval(timerInterval);
+
+timeoutSound.pause();
+
+timeoutSound.currentTime = 0;
+
+timeoutSound.play()
+.catch(() => {});
+
+      handleWrong();
+    }
+
+  },1000);
+
+}
+
+function endGame(){
+
+  clearInterval(timerInterval);
+
+  loseSound.pause();
+
+  loseSound.currentTime = 0;
+
+  loseSound.play().catch(() => {});
+
+  document.getElementById("game-area").style.display = "none";
+
+  document.getElementById("game-over").style.display = "block";
+
+  document.getElementById("final-score").textContent = score;
+
+  document.getElementById("explanation").innerHTML =
+  `
+  ❌ ${currentQuestion.explanation}
+  `;
+
+}
+
+function restartGame(){
+
+  score = 0;
+  level = 1;
+  hearts = 3;
+  streak = 0;
+
+  scoreElement.textContent = score;
+  levelElement.textContent = level;
+
+  document.getElementById("game-area").style.display = "block";
+
+  document.getElementById("game-over").style.display = "none";
+
+  document.querySelectorAll(".heart")
+  .forEach(h => h.classList.remove("lost"));
+
+  getQuestion();
+
+}
+
+function shareScore(){
+
+  const text =
+  `🔍 I scored ${score} points in Spot The Error!`;
+
+  if(navigator.share){
+
+    navigator.share({
+      title:"Spot The Error",
+      text:text
+    });
+
+  } else {
+
+    alert(text);
+  }
+
+}
+
+function launchConfetti(){
+
+  const canvas =
+  document.getElementById("confetti");
+
+  const ctx =
+  canvas.getContext("2d");
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = [];
+
+  for(let i=0;i<120;i++){
+
+    pieces.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height - canvas.height,
+      r:Math.random()*6 + 2,
+      d:Math.random()*120
+    });
+
+  }
+
+  let angle = 0;
+
+  function draw(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    for(let i=0;i<pieces.length;i++){
+
+      const p = pieces[i];
+
+      ctx.beginPath();
+
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+
+      ctx.fillStyle =
+  ctx.fillStyle = "#ffffff";
+
+      ctx.fill();
+
+    }
+
+    update();
+
+  }
+
+  function update(){
+
+    angle += 0.01;
+
+    for(let i=0;i<pieces.length;i++){
+
+      const p = pieces[i];
+
+      p.y += Math.cos(angle + p.d) + 3;
+
+      p.x += Math.sin(angle);
+
+      if(p.y > canvas.height){
+
+        p.y = -10;
+      }
+
+    }
+
+  }
+
+  let confettiAnimation =
+  setInterval(draw,20);
+
+  setTimeout(() => {
+
+    clearInterval(confettiAnimation);
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  },2500);
+
+}
+
+function startCountdown(){
+
+  let count = 3;
+
+  const countdownNumber =
+  document.getElementById("countdown-number");
+
+  const countdownScreen =
+  document.getElementById("countdown-screen");
+
+  function animate(text){
+
+    countdownNumber.classList.remove("count-animate");
+
+    void countdownNumber.offsetWidth;
+
+    countdownNumber.textContent = text;
+
+    countdownNumber.classList.add("count-animate");
+
+  }
+
+  animate(count);
+
+  const interval = setInterval(() => {
+
+    count--;
+
+    if(count > 0){
+
+      animate(count);
+
+    }
+
+    else if(count === 0){
+
+      animate("GO!");
+
+    }
+
+    else{
+
+      clearInterval(interval);
+
+      setTimeout(() => {
+
+        countdownScreen.style.display = "none";
+
+        getQuestion();
+
+      },700);
+
+    }
+
+  },1000);
+
+}
+
+document.getElementById("countdown-screen")
+.addEventListener("click",() => {
+
+  unlockAudio();
+
+  startCountdown();
+
+},{
+  once:true
+});
+
+correctionInput.addEventListener("keydown",(e)=>{
+
+  if(e.key === "Enter"){
+
+    submitCorrection();
+  }
+
+});
+
+</script>
+
+</body>
+</html>

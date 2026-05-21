@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spell Bee Game</title>
+
+<style>
+
+:root{
+  --primary:#0e257a;
+  --secondary:#F3BE7A;
+  --accent:#FFC81E;
+  --text:#12233c;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Inter,sans-serif;
+  background:radial-gradient(circle at top left,#F3BE7A 0%,#F3BE7A 40%,#F08D39 100%);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  overflow:hidden;
+}
+
+.game-container{
+  background:white;
+  width:100%;
+  max-width:600px;
+  padding:2rem;
+  border-radius:28px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.15);
+  text-align:center;
+  position:relative;
+}
+
+h1{
+  color:var(--primary);
+  margin-bottom:1rem;
+}
+
+.score{
+  font-size:1.1rem;
+  font-weight:700;
+  margin-bottom:0.7rem;
+}
+
+.level{
+  color:#555;
+  margin-bottom:1rem;
+}
+
+.timer{
+  font-weight:700;
+  margin-bottom:1rem;
+  color:#d62828;
+}
+
+#time{
+  display:inline-block;
+  transition:0.2s;
+}
+
+.word{
+  font-size:1.2rem;
+  font-weight:700;
+  color:var(--primary);
+  margin-bottom:1rem;
+}
+
+input{
+  width:100%;
+  padding:1rem;
+  border-radius:14px;
+  border:2px solid #ddd;
+  font-size:1rem;
+  margin-bottom:1rem;
+  outline:none;
+}
+
+input:focus{
+  border-color:var(--primary);
+}
+
+button{
+  padding:0.9rem 1.4rem;
+  border:none;
+  border-radius:14px;
+  background:var(--primary);
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+}
+
+#speak-btn{
+  margin-bottom:1rem;
+  background:var(--secondary);
+  color:var(--primary);
+}
+
+.replay-info{
+  margin-bottom:1rem;
+  color:#666;
+}
+
+.game-over{
+  display:none;
+}
+
+.game-over h2{
+  color:#d62828;
+  margin-bottom:1rem;
+}
+
+.share-btn{
+  background:#1d9bf0;
+  margin-top:1rem;
+}
+
+.back-btn{
+  position:absolute;
+  top:20px;
+  left:20px;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:white;
+  color:var(--primary);
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.4rem;
+  font-weight:700;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
+  z-index:1000;
+}
+
+.correct-word-text{
+  margin-top:1rem;
+  color:#666;
+}
+
+#correct-word{
+  color:var(--primary);
+  margin-top:0.5rem;
+}
+
+#countdown-screen{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  cursor:pointer;
+}
+
+#countdown-number{
+  font-size:7rem;
+  font-weight:900;
+  color:white;
+  text-align:center;
+}
+
+.count-animate{
+  animation:pop 0.9s ease;
+}
+
+@keyframes pop{
+  0%{
+  transform:scale(0.7);
+  opacity:0;
+}
+
+60%{
+  transform:scale(1.08);
+  opacity:1;
+}
+
+100%{
+  transform:scale(1);
+  opacity:1;
+}
+}
+
+.correct-flash{
+  animation:correctFlash 0.45s;
+}
+
+@keyframes correctFlash{
+  0%{
+    background:#b7ffb7;
+  }
+
+  100%{
+    background:white;
+  }
+}
+
+.wrong-shake{
+  animation:shake 0.45s;
+}
+
+@keyframes shake{
+  0%,100%{
+    transform:translateX(0);
+  }
+
+  20%{
+    transform:translateX(-10px);
+  }
+
+  40%{
+    transform:translateX(10px);
+  }
+
+  60%{
+    transform:translateX(-8px);
+  }
+
+  80%{
+    transform:translateX(8px);
+  }
+}
+
+#confetti{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:999;
+}
+
+</style>
+</head>
+<body>
+
+<a href="HomePage.html" class="back-btn">
+  ←
+</a>
+
+<div id="countdown-screen">
+  <div id="countdown-number">
+    TAP TO START
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<div class="game-container">
+
+  <div id="game-area">
+
+    <h1>🐝 Spell Bee</h1>
+
+    <div class="score">
+      Score: <span id="score">0</span>
+    </div>
+
+    <div class="level">
+      Level: <span id="level">1</span>
+    </div>
+
+    <div class="timer">
+      ⏳ Time Left:
+      <span id="time">10</span>s
+    </div>
+
+    <div class="word" id="word">
+      💡 Listen carefully
+    </div>
+
+    <button id="speak-btn">
+      🔊 Hear Word
+    </button>
+
+    <div class="replay-info">
+      Replays Left:
+      <span id="replays">2</span>
+    </div>
+
+    <input
+      type="text"
+      id="answer"
+      placeholder="Type the spelling here"
+      autocomplete="off"
+    >
+
+    <button id="submit-btn">
+      Submit
+    </button>
+
+  </div>
+
+  <div class="game-over" id="game-over">
+
+    <h2>Game Over!</h2>
+
+    <p>Your Score:</p>
+
+    <h1 id="final-score">0</h1>
+
+    <p class="correct-word-text">
+      Correct Word:
+    </p>
+
+    <h2 id="correct-word"></h2>
+
+    <button id="restart-btn">
+      Play Again
+    </button>
+
+    <br>
+
+    <button class="share-btn" id="share-btn">
+      Share Score
+    </button>
+
+  </div>
+
+</div>
+
+<!-- AUDIO -->
+
+<audio
+id="correct-sound"
+src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3">
+</audio>
+
+<audio
+id="wrong-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2220/2220-preview.mp3">
+</audio>
+
+<audio
+id="streak-sound"
+src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3">
+</audio>
+
+<audio
+id="timeout-sound"
+src="https://assets.mixkit.co/active_storage/sfx/254/254-preview.mp3">
+</audio>
+
+<script>
+
+const words = [
+
+  {
+    word:"cat",
+    hint:"A small domestic animal"
+  },
+
+  {
+    word:"apple",
+    hint:"A common fruit"
+  },
+
+  {
+    word:"calendar",
+    hint:"Used to track dates"
+  },
+
+  {
+    word:"beautiful",
+    hint:"Very attractive"
+  },
+
+  {
+    word:"knowledge",
+    hint:"Information and understanding"
+  },
+
+  {
+    word:"psychology",
+    hint:"Study of the mind"
+  },
+
+  {
+    word:"entrepreneur",
+    hint:"Business creator"
+  },
+
+  {
+    word:"miscellaneous",
+    hint:"Mixed variety"
+  }
+
+];
+
+let score = 0;
+let level = 1;
+let streak = 0;
+let currentWord = "";
+let timer = 10;
+let timerInterval;
+let replayLimit = 2;
+
+const scoreElement = document.getElementById("score");
+const levelElement = document.getElementById("level");
+const answerInput = document.getElementById("answer");
+const wordElement = document.getElementById("word");
+const timeElement = document.getElementById("time");
+const replayElement = document.getElementById("replays");
+
+const gameContainer = document.querySelector(".game-container");
+
+const correctSound = document.getElementById("correct-sound");
+const wrongSound = document.getElementById("wrong-sound");
+const streakSound = document.getElementById("streak-sound");
+const timeoutSound = document.getElementById("timeout-sound");
+
+correctSound.volume = 0.18;
+wrongSound.volume = 0.18;
+streakSound.volume = 0.15;
+timeoutSound.volume = 0.15;
+
+function unlockAudio(){
+
+  const sounds = [
+    correctSound,
+    wrongSound,
+    streakSound,
+    timeoutSound
+  ];
+
+  sounds.forEach(sound => {
+
+    sound.play()
+    .then(() => {
+
+      sound.pause();
+      sound.currentTime = 0;
+
+    })
+    .catch(() => {});
+
+  });
+}
+
+function getDifficultyWords(){
+
+  if(level <= 2){
+
+    return words.slice(0,2);
+
+  }
+
+  else if(level <= 5){
+
+    return words.slice(0,5);
+
+  }
+
+  else{
+
+    return words;
+  }
+}
+
+function getWord(){
+
+  clearInterval(timerInterval);
+
+  timer = level >= 7 ? 6 :
+          level >= 4 ? 8 : 10;
+
+  replayLimit = 2;
+
+  timeElement.textContent = timer;
+
+  replayElement.textContent = replayLimit;
+
+  const availableWords = getDifficultyWords();
+
+  const selected =
+    availableWords[
+      Math.floor(Math.random() * availableWords.length)
+    ];
+
+  currentWord = selected.word;
+
+  wordElement.innerHTML =
+    `💡 Hint: ${selected.hint}`;
+
+  speakWord();
+
+  startTimer();
+}
+
+function startTimer(){
+
+  timerInterval = setInterval(() => {
+
+    timer--;
+
+    timeElement.textContent = timer;
+
+    if(timer <= 3){
+
+      timeElement.style.color = "red";
+      timeElement.style.transform = "scale(1.3)";
+
+    }
+
+    else{
+
+      timeElement.style.color = "#d62828";
+      timeElement.style.transform = "scale(1)";
+    }
+
+    if(timer <= 0){
+
+      clearInterval(timerInterval);
+
+      timeoutSound.currentTime = 0;
+      timeoutSound.play();
+
+      streak = 0;
+
+      gameContainer.classList.add("wrong-shake");
+
+      setTimeout(() => {
+
+        gameContainer.classList.remove("wrong-shake");
+
+        endGame();
+
+      },500);
+    }
+
+  },1000);
+}
+
+function speakWord(){
+
+  if(replayLimit <= 0){
+
+    alert("No replays left!");
+
+    return;
+  }
+
+  replayLimit--;
+
+  replayElement.textContent = replayLimit;
+
+  const speech =
+    new SpeechSynthesisUtterance(currentWord);
+
+  speech.lang = "en-US";
+  speech.rate = 0.85;
+
+  window.speechSynthesis.cancel();
+
+  window.speechSynthesis.speak(speech);
+
+  answerInput.focus();
+}
+
+function checkAnswer(){
+
+  const answer =
+    answerInput.value.trim().toLowerCase();
+
+  if(answer === currentWord.toLowerCase()){
+
+    clearInterval(timerInterval);
+
+    correctSound.currentTime = 0;
+    correctSound.play();
+
+    gameContainer.classList.add("correct-flash");
+
+    setTimeout(() => {
+      gameContainer.classList.remove("correct-flash");
+    },450);
+
+    streak++;
+
+    if(streak >= 3){
+
+      streakSound.currentTime = 0;
+      streakSound.play();
+
+      launchConfetti();
+    }
+
+    score++;
+    level++;
+
+    scoreElement.textContent = score;
+    levelElement.textContent = level;
+
+    answerInput.value = "";
+
+    setTimeout(() => {
+      getWord();
+    },500);
+
+  }
+
+  else{
+
+    streak = 0;
+
+    wrongSound.currentTime = 0;
+    wrongSound.play();
+
+    gameContainer.classList.add("wrong-shake");
+
+    setTimeout(() => {
+
+      gameContainer.classList.remove("wrong-shake");
+
+      endGame();
+
+    },500);
+  }
+}
+
+function endGame(){
+
+  clearInterval(timerInterval);
+
+  document.getElementById("game-area").style.display = "none";
+
+  document.getElementById("game-over").style.display = "block";
+
+  document.getElementById("final-score").textContent = score;
+
+  document.getElementById("correct-word").textContent =
+    currentWord;
+}
+
+function restartGame(){
+
+  score = 0;
+  level = 1;
+  streak = 0;
+
+  scoreElement.textContent = score;
+  levelElement.textContent = level;
+
+  document.getElementById("game-area").style.display = "block";
+
+  document.getElementById("game-over").style.display = "none";
+
+  answerInput.value = "";
+
+  getWord();
+}
+
+function shareScore(){
+
+  const text =
+    `🐝 I scored ${score} points in Spell Bee!`;
+
+  if(navigator.share){
+
+    navigator.share({
+      title:"Spell Bee",
+      text:text
+    });
+
+  }
+
+  else{
+
+    alert(text);
+  }
+}
+
+function startCountdown(){
+
+  let count = 3;
+
+  const countdownNumber =
+    document.getElementById("countdown-number");
+
+  const countdownScreen =
+    document.getElementById("countdown-screen");
+
+  function animateNumber(text){
+
+    countdownNumber.classList.remove("count-animate");
+
+    void countdownNumber.offsetWidth;
+
+    countdownNumber.textContent = text;
+
+    countdownNumber.classList.add("count-animate");
+  }
+
+  animateNumber(count);
+
+  const interval = setInterval(() => {
+
+    count--;
+
+    if(count > 0){
+
+      animateNumber(count);
+
+    }
+
+    else if(count === 0){
+
+      animateNumber("GO!");
+
+    }
+
+    else{
+
+      clearInterval(interval);
+
+      setTimeout(() => {
+
+        countdownScreen.style.display = "none";
+
+        getWord();
+
+      },700);
+    }
+
+  },1000);
+}{
+
+  let count = 3;
+
+  const countdownNumber =
+    document.getElementById("countdown-number");
+
+  const countdownScreen =
+    document.getElementById("countdown-screen");
+
+  countdownNumber.textContent = count;
+
+  const interval = setInterval(() => {
+
+    count--;
+
+    if(count > 0){
+
+      countdownNumber.textContent = count;
+
+    }
+
+    else{
+
+      countdownNumber.textContent = "GO!";
+
+      setTimeout(() => {
+
+        countdownScreen.style.display = "none";
+
+        getWord();
+
+      },700);
+
+      clearInterval(interval);
+    }
+
+  },1000);
+}
+
+function launchConfetti(){
+
+  const canvas =
+    document.getElementById("confetti");
+
+  const ctx =
+    canvas.getContext("2d");
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = [];
+
+  for(let i=0;i<120;i++){
+
+    pieces.push({
+
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height-canvas.height,
+      r:Math.random()*6+2,
+      d:Math.random()*120
+
+    });
+  }
+
+  let angle = 0;
+
+  function draw(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    for(let i=0;i<pieces.length;i++){
+
+      const p = pieces[i];
+
+      ctx.beginPath();
+
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+
+      ctx.fillStyle =
+ ctx.fillStyle = "#6b3e26";
+
+      ctx.fill();
+    }
+
+    update();
+  }
+
+  function update(){
+
+    angle += 0.01;
+
+    for(let i=0;i<pieces.length;i++){
+
+      const p = pieces[i];
+
+      p.y += Math.cos(angle + p.d) + 3;
+
+      p.x += Math.sin(angle);
+
+      if(p.y > canvas.height){
+
+        p.y = -10;
+      }
+    }
+  }
+
+  const confettiAnimation =
+    setInterval(draw,20);
+
+  setTimeout(() => {
+
+    clearInterval(confettiAnimation);
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  },2500);
+}
+
+document.getElementById("speak-btn")
+.addEventListener("click", speakWord);
+
+document.getElementById("submit-btn")
+.addEventListener("click", checkAnswer);
+
+document.getElementById("restart-btn")
+.addEventListener("click", restartGame);
+
+document.getElementById("share-btn")
+.addEventListener("click", shareScore);
+
+answerInput.addEventListener("keydown",(e)=>{
+
+  if(e.key === "Enter"){
+
+    checkAnswer();
+  }
+});
+
+document
+.getElementById("countdown-screen")
+.addEventListener("click", () => {
+
+  unlockAudio();
+
+  startCountdown();
+
+},{
+  once:true
+});
+
+</script>
+
+</body>
+</html>
