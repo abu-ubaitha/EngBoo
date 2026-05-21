@@ -5,6 +5,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="copyright" content="EngBoo 2026">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EngBoo</title>
 
@@ -26,7 +27,9 @@ html{
 
 body{
   font-family:'Baloo 2',sans-serif;
-  overflow-x:hidden;
+overflow-x:hidden;
+width:100%;
+max-width:100vw;
 
   transition:
   background 1.2s cubic-bezier(.22,1,.36,1),
@@ -159,6 +162,10 @@ nav{
   flex-direction:column;
   gap:6px;
   cursor:pointer;
+
+  z-index:3000;
+
+  position:relative;
 }
 
 .hamburger div{
@@ -172,27 +179,64 @@ nav{
 .mobile-menu{
   position:fixed;
   top:0;
-  right:-100%;
-  width:80%;
+  right:0;
+
+  width:min(82vw,380px);
   height:100vh;
-  background:#111827;
+
+  background:
+  linear-gradient(
+    180deg,
+    rgba(8,12,25,0.98),
+    rgba(17,24,39,0.98)
+  );
+
   display:flex;
   flex-direction:column;
+
   padding:120px 30px;
   gap:26px;
-  transition:0.45s ease;
-  z-index:999;
+
+  transform:translateX(110%);
+  transition:
+  transform 0.45s cubic-bezier(.22,1,.36,1);
+
+  z-index:2000;
+
+  backdrop-filter:blur(20px);
+
+  border-left:
+  1px solid rgba(255,255,255,0.08);
 }
 
 .mobile-menu.active{
-  right:0;
+  transform:translateX(0);
 }
 
 .mobile-menu a{
   text-decoration:none;
   color:white;
-  font-size:1.4rem;
-  font-weight:700;
+
+  font-size:1.35rem;
+  font-weight:800;
+
+  padding:14px 18px;
+
+  border-radius:18px;
+
+  transition:
+  transform 0.25s ease,
+  background 0.25s ease;
+}
+
+.mobile-menu a:hover{
+
+  background:
+  rgba(255,255,255,0.08);
+
+  transform:
+  translateX(8px);
+
 }
 
 .hero{
@@ -282,14 +326,23 @@ nav{
 .game-card{
   width:100%;
   min-height:480px;
+
   border-radius:20px;
   padding:50px;
+
   position:relative;
   overflow:hidden;
+
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
-  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+
+  justify-content:center;
+  align-items:center;
+
+  text-align:center;
+
+  box-shadow:
+  0 20px 60px rgba(0,0,0,0.25);
 }
 
 .spellbee-card{
@@ -313,11 +366,19 @@ nav{
 }
 
 .game-tag{
-  background:rgba(255,255,255,0.15);
+  background:
+  rgba(255,255,255,0.15);
+
   width:max-content;
+
+  margin:auto;
+
   padding:10px 18px;
+
   border-radius:999px;
+
   font-weight:800;
+
   backdrop-filter:blur(10px);
 }
 
@@ -329,16 +390,30 @@ nav{
 
 .game-card p{
   font-size:1.3rem;
+
   margin-top:18px;
+
   max-width:700px;
+
   line-height:1.5;
+
+  margin-left:auto;
+  margin-right:auto;
 }
 
 .game-actions{
   margin-top:40px;
+
   display:flex;
+
+  justify-content:center;
+  align-items:center;
+
   gap:18px;
+
   flex-wrap:wrap;
+
+  margin-top:28px;
 }
 
 .play-btn,
@@ -351,8 +426,8 @@ nav{
 }
 
 .play-btn{
-  background:0D530E;
-  color:E7E1B1;
+  background:#121212;
+  color:#E7E1B1;
 }
 
 .leaderboard-btn{
@@ -362,7 +437,7 @@ nav{
 
 .play-btn:hover,
 .leaderboard-btn:hover{
-  transform:scale(1.05);
+  transform:scale(1.1);
 }
 
 .arrow{
@@ -537,12 +612,15 @@ footer{
   }
 
   .game-card{
-    padding:35px;
-    min-height:520px;
+    padding:28px;
+    min-height:390px;
   }
 
   .game-card h2{
     font-size:3rem;
+
+    text-shadow:
+    0 4px 18px rgba(0,0,0,0.25);
   }
 
   .arrow{
@@ -561,7 +639,15 @@ footer{
 
 }
 
+/* MOBILE */
+
 @media(max-width:600px){
+
+  .game-card{
+    border-radius:28px;
+    min-height:340px;
+    padding:22px;
+  }
 
   .hero h1{
     font-size:3.5rem;
@@ -576,11 +662,12 @@ footer{
   }
 
   .game-card h2{
-    font-size:2.4rem;
+    font-size:2.1rem;
   }
 
   .game-card p{
-    font-size:1.05rem;
+    font-size:0.98rem;
+    line-height:1.45;
   }
 
   .arrow{
@@ -607,6 +694,142 @@ footer{
 
 }
 
+  .game-card{
+  border-radius:28px;
+}
+
+  .hero h1{
+    font-size:3.5rem;
+  }
+
+  .hero p{
+    font-size:1.1rem;
+  }
+
+  .section-title{
+    font-size:2.3rem;
+  }
+
+.game-card h2{
+  font-size:2.1rem;
+}
+
+.game-card p{
+  font-size:0.98rem;
+  line-height:1.45;
+}
+
+  .arrow{
+    top:auto;
+    bottom:-80px;
+    transform:none;
+  }
+
+  .arrow:hover{
+    transform:scale(1.05);
+  }
+
+  .arrow-left{
+    left:32%;
+  }
+
+  .arrow-right{
+    right:32%;
+  }
+
+  .carousel-section{
+    padding-bottom:130px;
+  }
+
+
+
+html,
+body{
+  overflow-x:hidden;
+}
+
+.footer-grid{
+
+  width:100%;
+  max-width:1600px;
+
+  margin:auto;
+
+  display:flex;
+
+  justify-content:space-between;
+  align-items:stretch;
+
+  gap:28px;
+
+  margin-top:40px;
+
+}
+
+
+.footer-column{
+
+  flex:1;
+
+  min-width:0;
+
+}
+
+.footer-column h3{
+
+  margin-bottom:14px;
+
+  font-size:1.3rem;
+
+}
+
+.footer-column p{
+
+  line-height:1.8;
+
+  opacity:0.9;
+
+}
+
+.footer-divider{
+
+  width:1px;
+
+  min-height:220px;
+
+  background:
+  rgba(255,255,255,0.14);
+
+  flex-shrink:0;
+
+}
+
+.footer-bottom-text{
+
+  margin-top:50px;
+
+  opacity:0.7;
+
+  font-size:0.95rem;
+
+}
+
+@media(max-width:1000px){
+
+  .footer-grid{
+
+    flex-direction:column;
+
+  }
+
+  .footer-divider{
+
+    display:none;
+
+  }
+
+}
+
 </style>
 </head>
 <body class="mode-spellbee">
@@ -623,7 +846,7 @@ footer{
   <a href="#features">Features</a>
   <a href="#faq">FAQ</a>
   <a href="#footer">TOS</a>
-  <a href="#" class="login-btn">Google Login</a>
+  
 </div>
 
 <div class="hamburger" id="hamburger">
@@ -639,7 +862,7 @@ footer{
   <a href="#features">Features</a>
   <a href="#faq">FAQ</a>
   <a href="#footer">TOS</a>
-  <a href="#">Google Login</a>
+ 
 </div>
 
 <section class="hero">
@@ -647,7 +870,7 @@ footer{
 <h1>Learn English.<br>Like An Arcade Game.</h1>
 
 <p>
-EngBoo transforms grammar, spelling, and vocabulary into addictive competitive games with streaks, leaderboards, animations, XP, and rewards.
+EngBoo transforms grammar, spelling, and vocabulary into entertainnig games with streaks, coins, and rewards.
 </p>
 
 <div class="hero-buttons">
@@ -681,7 +904,7 @@ Fast-paced spelling battles with combo streaks, XP rewards, and competitive rank
 
 <div class="game-actions">
 <a href="SpellBee.html" class="play-btn">Play Now</a>
-<a href="#" class="leaderboard-btn">Leaderboard</a>
+<!-- <a href="#" class="leaderboard-btn">Leaderboard</a> -->
 </div>
 
 </div>
@@ -700,7 +923,7 @@ Find grammar mistakes under pressure with satisfying effects and arcade-style pr
 
 <div class="game-actions">
 <a href="SpotTheError.html" class="play-btn">Play Now</a>
-<a href="#" class="leaderboard-btn">Leaderboard</a>
+<!-- <a href="#" class="leaderboard-btn">Leaderboard</a> -->
 </div>
 
 </div>
@@ -719,7 +942,7 @@ Classic hangman redesigned with modern visuals, pressure mechanics, and competit
 
 <div class="game-actions">
 <a href="Hangman.html" class="play-btn">Play Now</a>
-<a href="#" class="leaderboard-btn">Leaderboard</a>
+<!-- <a href="#" class="leaderboard-btn">Leaderboard</a> -->
 </div>
 
 </div>
@@ -754,12 +977,6 @@ Typing races, pronunciation battles, speed quizzes, vocabulary PvP, and more are
 
 <div class="features-grid">
 
-<div class="feature-card">
-<h3>🏆 Competitive Rankings</h3>
-<p>
-Climb real leaderboards with authenticated usernames and skill-based progression.
-</p>
-</div>
 
 <div class="feature-card">
 <h3>🎮 Arcade Feel</h3>
@@ -769,16 +986,23 @@ Heavy animations, smooth transitions, combo streaks, and immersive game energy.
 </div>
 
 <div class="feature-card">
-<h3>⚙️ Custom Settings</h3>
+<h3>🧠 Learn Effortlessly</h3>
 <p>
-Toggle sound effects, confetti, light mode, dark mode, and visual intensity.
+EngBoo turns grammar, spelling, and vocabulary into fast arcade-style challenges that feel fun instead of stressful.
 </p>
 </div>
 
 <div class="feature-card">
-<h3>🐱 Boo The Mascot</h3>
+<h3>⚡ Improve English Faster</h3>
 <p>
-Your cat companion reacts to streaks, wins, fails, and achievements.
+Short competitive game rounds help train memory, reaction speed, spelling accuracy, and sentence correction naturally.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>🌍 Learn Anywhere</h3>
+<p>
+Play smoothly on phones, tablets, and computers with responsive controls designed for every screen size.
 </p>
 </div>
 
@@ -793,47 +1017,120 @@ Your cat companion reacts to streaks, wins, fails, and achievements.
 <div class="faq-item">
 <div class="faq-question">Is EngBoo free?</div>
 <div class="faq-answer">
-Yes. Core games are completely free to play.
+Yes. all games are completely free to play.
 </div>
 </div>
 
 <div class="faq-item">
-<div class="faq-question">Will progress save automatically?</div>
+<div class="faq-question">I found a bug</div>
 <div class="faq-answer">
-Yes. Google login support will sync scores, streaks, and leaderboard data.
+The website is beta, prone to bugs.<a href="mailto:zaptrone.designs@gmail.com">reach out to us</a> so we can resolve it.
 </div>
 </div>
 
-<div class="faq-item">
-<div class="faq-question">Can I disable effects?</div>
-<div class="faq-answer">
-Yes. You can disable confetti, sound effects, and intense animations in settings.
-</div>
-</div>
+
+
+
 
 </section>
-
 <footer id="footer">
 
-<div class="footer-links">
-  <a href="#">Terms of Service</a>
-  <a href="#">Privacy Policy</a>
-  <a href="#">Contact</a>
+<h2 style="
+font-size:2.2rem;
+margin-bottom:40px;
+font-weight:800;
+text-align:center;
+">
+EngBoo Policies
+</h2>
+
+<div class="footer-grid">
+
+<div class="footer-column">
+
+<h3>📜 Terms of Service</h3>
+
+<p>
+By using EngBoo, you agree to use the platform responsibly and respectfully. Copying, exploiting, redistributing, reverse engineering, or damaging the platform or its content without permission is prohibited.
+</p>
+
 </div>
+
+<div class="footer-divider"></div>
+
+<div class="footer-column">
+
+<h3>🔒 Privacy Policy</h3>
+
+<p>
+EngBoo currently stores minimal user information. Future account systems may securely store usernames, settings, and gameplay progress to improve user experience.
+</p>
+
+</div>
+
+<div class="footer-divider"></div>
+
+<div class="footer-column">
+
+<h3>📧 Contact</h3>
+
+<p>
+For feedback, bug reports, collaborations, or business inquiries:
+<br><br>
+
+<a href="mailto:zaptrone.designs@gmail.com">Email Us</a>
+</p>
+
+</div>
+
+<div class="footer-divider"></div>
+
+<div class="footer-column">
+
+<h3>© Copyright</h3>
 
 <p>
 © 2026 EngBoo. All Rights Reserved.
+<br><br>
+
+All branding, UI designs, visuals, animations, source code, game concepts, and content belonging to EngBoo are protected under copyright and intellectual property laws.
+
+Unauthorized copying or redistribution is prohibited.
+</p>
+
+</div>
+
+</div>
+
+<p class="footer-bottom-text">
+Built with passion for interactive English learning.
 </p>
 
 </footer>
-
 <script>
 
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 
 hamburger.addEventListener('click',()=>{
+
   mobileMenu.classList.toggle('active');
+
+});
+
+// CLOSE MENU WHEN LINK CLICKED
+
+const mobileLinks =
+document.querySelectorAll('.mobile-menu a');
+
+mobileLinks.forEach(link=>{
+
+  link.addEventListener('click',()=>{
+
+    mobileMenu.classList.remove('active');
+
+  });
+
 });
 
 const track = document.getElementById('carouselTrack');
