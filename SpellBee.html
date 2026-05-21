@@ -358,7 +358,15 @@ id="timeout-sound"
 src="https://assets.mixkit.co/active_storage/sfx/254/254-preview.mp3">
 </audio>
 
+<script src="storage.js"></script>
+
 <script>
+
+let data = typeof getData === "function" ? getData() : { currentUser: "guest" };
+
+if(!data.currentUser){
+  window.location.href = "login.html";
+}
 
 const words = [
 
@@ -702,6 +710,8 @@ function endGame(){
 
   clearInterval(timerInterval);
 
+updateScore("spellbee", score);
+
   document.getElementById("game-area").style.display = "none";
 
   document.getElementById("game-over").style.display = "block";
@@ -731,6 +741,8 @@ usedWords = [];
   getWord();
 }
 
+
+
 function shareScore(){
 
   const text =
@@ -757,6 +769,8 @@ function shareScore(){
   function startCountdown(){
 
   let count = 3;
+
+  let gameStarted = false;
 
   const countdownNumber =
     document.getElementById("countdown-number");
@@ -797,13 +811,16 @@ function shareScore(){
 
       clearInterval(interval);
 
-      setTimeout(() => {
+setTimeout(() => {
+  countdownScreen.style.opacity = "0";
+  countdownScreen.style.pointerEvents = "none";
 
-        countdownScreen.style.display = "none";
+  setTimeout(() => {
+    countdownScreen.style.display = "none";
+    getWord();
+  }, 300);
 
-        getWord();
-
-      },700);
+}, 700);
     }
 
   },1000);

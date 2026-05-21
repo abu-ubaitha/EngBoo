@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EngBoo Login</title>
+
+<style>
+/* ===== BACKGROUND ===== */
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(135deg,#0f172a,#1e1b4b,#0b1020);
+  overflow:hidden;
+}
+
+/* floating glow blobs */
+.bg-blobs::before,
+.bg-blobs::after{
+  content:"";
+  position:absolute;
+  width:300px;
+  height:300px;
+  background:rgba(255,120,0,0.25);
+  border-radius:50%;
+  filter:blur(80px);
+  animation: float 8s infinite ease-in-out;
+}
+
+.bg-blobs::after{
+  right:10%;
+  bottom:10%;
+  background:rgba(0,150,255,0.25);
+  animation-delay:2s;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-40px);}
+}
+
+/* ===== CARD ===== */
+.box{
+  width:340px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(20px);
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  color:white;
+  position:relative;
+  animation: pop 0.6s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(0.8); opacity:0;}
+  to{transform:scale(1); opacity:1;}
+}
+
+/* ===== TITLE ===== */
+h2{
+  text-align:center;
+  margin-bottom:10px;
+}
+
+/* ===== INPUTS ===== */
+.input-box{
+  position:relative;
+  margin:12px 0;
+}
+
+input{
+  width:80%;
+  padding:12px 5px 12px 12px;
+  border-radius:10px;
+  border:none;
+  outline:none;
+}
+
+/* eye button */
+.eye{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+}
+
+/* info button */
+.info{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+}
+
+/* buttons */
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  margin-top:10px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.primary{
+  background:#ff7a00;
+  color:white;
+}
+
+.secondary{
+  background:#1e40af;
+  color:white;
+}
+
+button:hover{
+  transform:scale(1.03);
+}
+
+/* tabs */
+.tabs{
+  display:flex;
+  margin-bottom:10px;
+}
+
+.tabs button{
+  flex:1;
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.2);
+  color:white;
+}
+
+.tabs button.active{
+  background:#ff7a00;
+}
+
+/* shake animation */
+.shake{
+  animation: shake 0.4s;
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-8px);}
+  40%{transform:translateX(8px);}
+  60%{transform:translateX(-6px);}
+  80%{transform:translateX(6px);}
+}
+
+/* modal */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-content{
+  background:white;
+  color:black;
+  padding:20px;
+  border-radius:12px;
+  width:280px;
+  text-align:center;
+}
+
+.close{
+  margin-top:10px;
+  background:red;
+  color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg-blobs"></div>
+
+<div class="box" id="card">
+
+  <h2>Get Started with EngBoo</h2>
+  <p style="text-align: center;">🎮"Learn english like arcade"🕹️</p>
+
+  <div class="tabs">
+    <button id="loginTab" class="active" onclick="switchTab('login')">Login</button>
+    <button id="signupTab" onclick="switchTab('signup')">Signup</button>
+  </div>
+
+  <div class="input-box">
+    <input id="username" placeholder="Username">
+    <span class="info" onclick="openInfo()">ℹ️</span>
+  </div>
+
+  <div class="input-box">
+    <input id="password" type="password" placeholder="Password">
+    <span class="eye" onclick="togglePass()">👁</span>
+  </div>
+
+  <button class="primary" id="actionBtn" onclick="login()">Login</button>
+  <button class="secondary" onclick="signup()">Create Account</button>
+
+</div>
+
+<!-- INFO MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>ℹ️ Why we use accounts</h3>
+    <p>
+      We use accounts to store your game stats like scores, plays, and progress.
+      You can view everything in your Profile page.
+    </p>
+    <button class="close" onclick="closeInfo()">Close</button>
+  </div>
+</div>
+
+<script src="storage.js"></script>
+
+<script>
+
+let isLogin = true;
+
+/* ===== TAB SWITCH ===== */
+function switchTab(type){
+  isLogin = (type === "login");
+
+  document.getElementById("loginTab").classList.toggle("active", isLogin);
+  document.getElementById("signupTab").classList.toggle("active", !isLogin);
+
+  document.getElementById("actionBtn").textContent =
+    isLogin ? "Login" : "Signup";
+}
+
+/* ===== PASSWORD TOGGLE ===== */
+function togglePass(){
+  let p = document.getElementById("password");
+  p.type = (p.type === "password") ? "text" : "password";
+}
+
+/* ===== INFO MODAL ===== */
+function openInfo(){
+  document.getElementById("modal").style.display = "flex";
+}
+
+function closeInfo(){
+  document.getElementById("modal").style.display = "none";
+}
+
+/* ===== SHAKE ERROR ===== */
+function shake(){
+  let card = document.getElementById("card");
+  card.classList.add("shake");
+
+  setTimeout(()=>{
+    card.classList.remove("shake");
+  },400);
+}
+
+/* ===== ACTIONS ===== */
+function login(){
+  let u = username.value;
+  let p = password.value;
+
+  if(loginUser(u,p)){
+    window.location.href = "index.html";
+  } else {
+    shake();
+  }
+}
+
+function signup(){
+  let u = username.value;
+  let p = password.value;
+
+  if(registerUser(u,p)){
+    alert("Account created!");
+  } else {
+    shake();
+  }
+}
+
+</script>
+
+</body>
+</html>

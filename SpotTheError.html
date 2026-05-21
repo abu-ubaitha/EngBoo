@@ -1365,6 +1365,8 @@ function startTimer(){
 
 function endGame(){
 
+   updateScore("spot", score);
+
   clearInterval(timerInterval);
 
   loseSound.pause();
@@ -1383,6 +1385,8 @@ function endGame(){
   `
   ❌ ${currentQuestion.explanation}
   `;
+
+ 
 
 }
 

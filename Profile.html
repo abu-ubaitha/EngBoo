@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background: #0f0f0f;
+  color: white;
+  margin:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.card{
+  background: rgba(255,255,255,0.08);
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  min-width:300px;
+  backdrop-filter: blur(10px);
+}
+
+button{
+  margin-top:20px;
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.logout-btn{
+  background: red;
+  color: white;
+}
+
+.back-btn{
+  background:#444;
+  color:white;
+  margin-right:10px;
+}
+
+.grid{
+  display:grid;
+  gap:15px;
+  margin-top:20px;
+}
+
+.game-card{
+  background: rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:12px;
+  text-align:left;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>👤 Profile</h1>
+
+  <div id="profile"></div>
+
+  <div>
+    <button class="back-btn" onclick="goBack()">⬅️ Back</button>
+    <button class="logout-btn" onclick="logout()">📤 Logout</button>
+  </div>
+
+</div>
+
+<script src="storage.js"></script>
+
+<script>
+
+function loadProfile(){
+
+  let data = getData();
+  let user = data.currentUser;
+
+  // 🔒 not logged in
+  if(!user){
+    window.location.href = "login.html";
+    return;
+  }
+
+  let stats = data.users[user].stats;
+
+  // 🔒 safety fallback (IMPORTANT)
+  if(!stats.spot){
+    stats.spot = {plays:0, best:0};
+  }
+
+  let joined = new Date(data.users[user].joinedAt).toLocaleDateString();
+
+  document.getElementById("profile").innerHTML = `
+    <p><b>Username:</b> ${user}</p>
+    <p><b>Joined:</b> ${joined}</p>
+
+    <div class="grid">
+
+      <div class="game-card">
+        <b>📘 SpellBee</b><br>
+        Plays: ${stats.spellbee.plays}<br>
+        Best: ${stats.spellbee.best}
+      </div>
+
+      <div class="game-card">
+        <b>🕹 Hangman</b><br>
+        Plays: ${stats.hangman.plays}<br>
+        Best: ${stats.hangman.best}
+      </div>
+
+      <div class="game-card">
+        <b>🔍 Spot The Error</b><br>
+        Plays: ${stats.spot.plays}<br>
+        Best: ${stats.spot.best}
+      </div>
+
+    </div>
+  `;
+}
+
+function goBack(){
+  window.location.href = "index.html";
+}
+
+function logout(){
+  logoutUser();
+  window.location.href = "login.html";
+}
+
+window.addEventListener("load", loadProfile);
+
+</script>
+
+</body>
+</html>

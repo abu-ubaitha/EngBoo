@@ -325,7 +325,7 @@ nav{
 
 .game-card{
   width:100%;
-  min-height:480px;
+  min-height:100px;
 
   border-radius:20px;
   padding:50px;
@@ -518,11 +518,11 @@ nav{
 }
 
 .arrow-left{
-  left:-20px;
+  left:-70px;
 }
 
 .arrow-right{
-  right:-20px;
+  right:-70px;
 }
 
 .features{
@@ -843,10 +843,8 @@ body{
 
 <div class="nav-links">
   <a href="#games">Games</a>
+  <a href="Profile.html">Profile</a>
   <a href="#features">Features</a>
-  <a href="#faq">FAQ</a>
-  <a href="#footer">TOS</a>
-  
 </div>
 
 <div class="hamburger" id="hamburger">
@@ -859,9 +857,8 @@ body{
 
 <div class="mobile-menu" id="mobileMenu">
   <a href="#games">Games</a>
+  <a href="Profile.html">Profile</a>
   <a href="#features">Features</a>
-  <a href="#faq">FAQ</a>
-  <a href="#footer">TOS</a>
  
 </div>
 
@@ -969,11 +966,10 @@ Typing races, pronunciation battles, speed quizzes, vocabulary PvP, and more are
 </div>
 </div>
 
-</section>
 
 <section class="features" id="features">
 
-<h2 class="section-title">Why EngBoo Feels Addictive</h2>
+<h2 class="section-title">Why EngBoo Feels Entertaining?</h2>
 
 <div class="features-grid">
 
@@ -1072,7 +1068,7 @@ EngBoo currently stores minimal user information. Future account systems may sec
 
 <div class="footer-column">
 
-<h3>📧 Contact</h3>
+<h3>💌 Contact</h3>
 
 <p>
 For feedback, bug reports, collaborations, or business inquiries:
@@ -1107,6 +1103,11 @@ Built with passion for interactive English learning.
 </p>
 
 </footer>
+
+
+
+<script src="storage.js"></script>
+
 <script>
 
 const hamburger = document.getElementById('hamburger');
@@ -1147,6 +1148,38 @@ const modes = [
 ];
 
 let currentIndex = 0;
+
+function loadLeaderboard(){
+
+  let data = getData();
+
+  let sb = data.leaderboard.spellbee.slice(0,3);
+
+  document.getElementById("sb-board").innerHTML =
+    sb.map(x =>
+      `<p>${x.user} - ${x.score}</p>`
+    ).join("");
+}
+
+function loadProfile(){
+
+  let data = getData();
+  let user = data.currentUser;
+
+  let stats = data.users[user].stats;
+
+  document.getElementById("profile").innerHTML = `
+    <h2>${user}</h2>
+
+    <p>SpellBee Plays: ${stats.spellbee.plays}</p>
+    <p>SpellBee Best: ${stats.spellbee.best}</p>
+
+    <p>Hangman Plays: ${stats.hangman.plays}</p>
+    <p>Hangman Best: ${stats.hangman.best}</p>
+  `;
+}
+
+
 
 function updateCarousel(){
 
@@ -1230,6 +1263,23 @@ window.addEventListener(
   lastScrollY =
   window.scrollY;
 
+});
+
+function logout() {
+  const data = getData();
+
+  // clear current user
+  data.currentUser = null;
+
+  // save back to storage
+  saveData(data); // IMPORTANT: you must have this in storage.js
+
+  // redirect to login
+  window.location.href = "login.html";
+}
+
+window.addEventListener("load", () => {
+  loadLeaderboard();
 });
 
 </script>
