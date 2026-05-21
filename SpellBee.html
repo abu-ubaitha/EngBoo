@@ -202,46 +202,7 @@ button:hover{
   animation:correctFlash 0.45s;
 }
 
-@media(max-width:600px){
 
-  body{
-    padding:12px;
-  }
-
-  .game-container{
-    padding:1.2rem;
-    border-radius:20px;
-  }
-
-  h1{
-    font-size:1.6rem;
-  }
-
-@media(max-width:600px){
-
-  body{
-    padding:12px;
-  }
-
-  .game-container{
-    padding:1.2rem;
-    border-radius:20px;
-  }
-
-  h1{
-    font-size:1.6rem;
-  }
-
-  #countdown-number{
-    font-size:2rem;   /* smaller text */
-    text-align:center;
-    padding:0 16px;
-    line-height:1.2;
-    max-width:90%;
-    word-break:break-word;
-  }
-
-}
 
 @keyframes correctFlash{
   0%{
@@ -285,21 +246,19 @@ button:hover{
   pointer-events:none;
   z-index:999;
 }
-}
+
 </style>
 </head>
 <body>
 
-<div class="game-container">
+<a href="index.html" class="back-btn">
+  ←
+</a>
 
-  <a href="index.html" class="back-btn">
-    ←
-  </a>
-
-  <div id="game-area">
-    ...
+<div id="countdown-screen">
+  <div id="countdown-number">
+    TAP TO START
   </div>
-
 </div>
 
 <canvas id="confetti"></canvas>
