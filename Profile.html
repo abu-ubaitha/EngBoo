@@ -79,24 +79,22 @@ button{
 <script src="storage.js"></script>
 
 <script>
-
 function loadProfile(){
 
   let data = getData();
   let user = data.currentUser;
 
-  // 🔒 not logged in
   if(!user){
     window.location.href = "login.html";
     return;
   }
 
-  let stats = data.users[user].stats;
+  let stats = data.users[user].stats || {};
 
-  // 🔒 safety fallback (IMPORTANT)
-  if(!stats.spot){
-    stats.spot = {plays:0, best:0};
-  }
+  // SAFE FALLBACKS
+  let spellbee = stats.spellbee || { plays: 0, best: 0 };
+  let hangman = stats.hangman || { plays: 0, best: 0 };
+  let spot = stats.spot || { plays: 0, best: 0 };
 
   let joined = new Date(data.users[user].joinedAt).toLocaleDateString();
 
@@ -108,20 +106,20 @@ function loadProfile(){
 
       <div class="game-card">
         <b>📘 SpellBee</b><br>
-        Plays: ${stats.spellbee.plays}<br>
-        Best: ${stats.spellbee.best}
+        Plays: ${spellbee.plays}<br>
+        Best: ${spellbee.best}
       </div>
 
       <div class="game-card">
         <b>🕹 Hangman</b><br>
-        Plays: ${stats.hangman.plays}<br>
-        Best: ${stats.hangman.best}
+        Plays: ${hangman.plays}<br>
+        Best: ${hangman.best}
       </div>
 
       <div class="game-card">
         <b>🔍 Spot The Error</b><br>
-        Plays: ${stats.spot.plays}<br>
-        Best: ${stats.spot.best}
+        Plays: ${spot.plays}<br>
+        Best: ${spot.best}
       </div>
 
     </div>
@@ -138,7 +136,6 @@ function logout(){
 }
 
 window.addEventListener("load", loadProfile);
-
 </script>
 
 </body>

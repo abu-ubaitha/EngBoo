@@ -1,3 +1,4 @@
+
 // ======================
 // GAME DATA ENGINE
 // ======================
@@ -14,11 +15,7 @@ function getData() {
   };
 }
 
-let joinedRaw = data.users[user].joinedAt;
 
-let joined = joinedRaw
-  ? new Date(joinedRaw).toLocaleDateString()
-  : "Unknown (old account)";
 function saveData(data) {
   localStorage.setItem("gameData", JSON.stringify(data));
 }
@@ -38,16 +35,18 @@ function registerUser(username, password) {
   }
 
   data.users[username] = {
-  password,
-  joinedAt: Date.now(), // ✅ use timestamp (safer than ISO)
-  stats: {
-    spellbee: { plays: 0, best: 0 },
-    hangman: { plays: 0, best: 0 },
-    spot: { plays: 0, best: 0 }
-  }
-};
+    password,
+    joinedAt: Date.now(),
+    stats: {
+      spellbee: { plays: 0, best: 0 },
+      hangman: { plays: 0, best: 0 },
+      spot: { plays: 0, best: 0 }
+    }
+  };
 
+  data.currentUser = username; // ✅ ADD THIS
   saveData(data);
+
   return true;
 }
 
@@ -87,47 +86,13 @@ function logoutUser() {
 // UPDATE SCORE
 // ======================
 
-function updateScore(game, score) {
-  let data = getData();
-  let user = data.currentUser;
-
-  if(!data.users[user].joinedAt){
-  data.users[user].joinedAt = Date.now();
-  saveData(data);
-}
-
-  if (!user) return;
-
-  data.users[user].stats[game].plays++;
-
-  if (score > data.users[user].stats[game].best) {
-    data.users[user].stats[game].best = score;
-  }
-
-  data.leaderboard[game].push({
-    user,
-    score
-  });
-
-  data.leaderboard[game].sort((a, b) => b.score - a.score);
-
-  saveData(data);
-}
 
 function logout(){
   logoutUser();
   window.location.href = "login.html";
 }
 
-data.users[username] = {
-  password,
-  joinedAt: new Date().toISOString(),
-  stats: {
-    spellbee: { plays: 0, best: 0 },
-    hangman: { plays: 0, best: 0 },
-    spot: { plays: 0, best: 0 } 
-  }
-};
+
 
 function requireLogin() {
   const data = getData();
@@ -141,3 +106,30 @@ window.addEventListener("load", () => {
   requireLogin();
   loadLeaderboard();
 });
+
+
+
+function updateScore(game, score) {
+  let data = getData();
+  let user = data.currentUser;
+
+  if (!user) return;
+
+  if (!data.users[user].stats) {
+    data.users[user].stats = {};
+  }
+
+  if (!data.users[user].stats[game]) {
+    data.users[user].stats[game] = { plays: 0, best: 0 };
+  }
+
+  let g = data.users[user].stats[game];
+
+  g.plays += 1;
+
+  if (score > g.best) {
+    g.best = score;
+  }
+
+  saveData(data);
+}

@@ -452,7 +452,7 @@ preload="auto">
 id="tap-sound"
 src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3">
 </audio>
-
+<script src="storage.js"></script>
 <script>
 
 let usedWords = [];
@@ -1288,18 +1288,77 @@ function endGame(){
 
   clearInterval(timerInterval);
 
+  // SAVE SCORE
+  updateScore("hangman", score);
+
+  loseSound.pause();
   loseSound.currentTime = 0;
 
   loseSound.play().catch(()=>{});
 
-  document.getElementById("game-over")
-  .style.display = "block";
+  // HIDE GAME UI
+  hintElement.style.display = "none";
+
+  wordDisplay.style.display = "none";
+
+  keyboard.style.display = "none";
+
+  definitionBox.style.display = "none";
+
+  document.querySelector(".reveal-btn")
+  .style.display = "none";
+
+  streakElement.style.display = "none";
+
+  // SHOW GAME OVER
+  const gameOver =
+  document.getElementById("game-over");
+
+  gameOver.style.display = "block";
 
   document.getElementById("final-score")
   .textContent = score;
 
-  keyboard.innerHTML = "";
+  // SHOW CORRECT WORD
+  gameOver.innerHTML = `
+    <h2>Game Over!</h2>
 
+    <p style="margin-top:10px;">
+      The word was:
+    </p>
+
+    <h3 style="
+      margin-top:10px;
+      color:#0e257a;
+    ">
+      ${currentWord.toUpperCase()}
+    </h3>
+
+    <p style="margin-top:18px;">
+      Final Score
+    </p>
+
+    <h1 id="final-score">
+      ${score}
+    </h1>
+
+    <button
+    class="reveal-btn"
+    onclick="restartGame()">
+      Play Again
+    </button>
+
+    <button
+    class="reveal-btn"
+    style="
+      margin-left:10px;
+      background:#1d9bf0;
+      color:white;
+    "
+    onclick="shareScore()">
+      Share Score
+    </button>
+  `;
 }
 
 function restartGame(){
@@ -1310,20 +1369,63 @@ function restartGame(){
   coins = 0;
   streak = 0;
 
+  gameEnded = false;
+
   scoreElement.textContent = score;
+
   levelElement.textContent = level;
+
   coinsElement.textContent = coins;
 
   streakElement.textContent =
   "🔥 Streak x0";
 
+  // SHOW UI AGAIN
+
+  hintElement.style.display = "block";
+
+  wordDisplay.style.display = "flex";
+
+  keyboard.style.display = "grid";
+
+  definitionBox.style.display = "block";
+
+  document.querySelector(".reveal-btn")
+  .style.display = "inline-block";
+
+  streakElement.style.display = "block";
+
   document.getElementById("game-over")
   .style.display = "none";
 
   document.querySelectorAll(".heart")
-  .forEach(h => h.classList.remove("lost"));
+  .forEach(h =>
+    h.classList.remove("lost")
+  );
 
   startGame();
+
+}
+
+function shareScore(){
+
+  const text =
+  `🎯 I scored ${score} points in Hangman! Play here: https://eng-boo.vercel.app`;
+
+  if(navigator.share){
+
+    navigator.share({
+      title:"Hangman",
+      text:text
+    });
+
+  }
+
+  else{
+
+    alert(text);
+
+  }
 
 }
 
@@ -1493,6 +1595,7 @@ document
 },{
   once:true
 });
+
 
 </script>
 
