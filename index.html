@@ -1,6 +1,4 @@
-# Replace your current `HomePage.html` with this full code
 
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -242,6 +240,23 @@ nav{
 
   border-left:
   1px solid rgba(255,255,255,0.08);
+}
+
+.mobile-close{
+  align-self:flex-end;
+  background:rgba(255, 0, 0, 0.4);
+  border:none;
+  color:white;
+  font-size:1rem;
+  padding:12px 16px;
+  border-radius:999px;
+  cursor:pointer;
+  transition:background 0.25s ease, transform 0.25s ease;
+}
+
+.mobile-close:hover{
+  background:rgba(255,255,255,0.24);
+  transform:scale(1.02);
 }
 
 .mobile-menu.active{
@@ -595,6 +610,78 @@ nav{
   right:-70px;
 }
 
+.reviews{
+  padding:80px 20px 40px;
+}
+
+.reviews-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
+  max-width:1300px;
+  margin:auto;
+}
+
+.review-card{
+  background:rgba(255,255,255,0.12);
+  border-radius:28px;
+  padding:28px;
+  backdrop-filter:blur(14px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.review-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+
+.review-author{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.review-avatar{
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid rgba(255,255,255,0.18);
+}
+
+.review-meta{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.review-name{
+  font-weight:800;
+  font-size:1rem;
+}
+
+.review-date{
+  font-size:0.92rem;
+  opacity:0.75;
+}
+
+.review-stars{
+  display:flex;
+  gap:4px;
+  color:#ffd166;
+  font-size:0.95rem;
+}
+
+.review-text{
+  line-height:1.7;
+  opacity:0.94;
+  font-size:1rem;
+}
+
 .features{
   padding:120px 20px;
 }
@@ -932,10 +1019,10 @@ body{
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose">✕</button>
   <a href="#games">Games</a>
   <a href="Profile.html">Profile</a>
   <a href="#features">Features</a>
- 
 </div>
 
 <section class="hero">
@@ -1048,7 +1135,15 @@ Typing races, pronunciation battles, speed quizzes, vocabulary PvP, and more are
 
 </div>
 </div>
+</section>  
 
+<section class="reviews" id="reviews">
+
+<h2 class="section-title">Player Reviews</h2>
+
+<div class="reviews-grid" id="reviewsGrid"></div>
+
+</section>
 
 <section class="features" id="features">
 
@@ -1094,20 +1189,25 @@ Play smoothly on phones, tablets, and computers with responsive controls designe
 <h2 class="section-title">FAQ</h2>
 
 <div class="faq-item">
-<div class="faq-question">Is EngBoo free?</div>
+<div class="faq-question">Is EngBoo free? 😻</div>
 <div class="faq-answer">
 Yes. all games are completely free to play.
 </div>
 </div>
 
 <div class="faq-item">
-<div class="faq-question">I found a bug</div>
+<div class="faq-question">I found a bug 🙀</div>
 <div class="faq-answer">
 The website is beta, prone to bugs.<a href="mailto:zaptrone.designs@gmail.com">reach out to us</a> so we can resolve it.
 </div>
 </div>
 
-
+<div class="faq-item">
+<div class="faq-question">How to Leave review? 😽</div>
+<div class="faq-answer">
+Send your honest review to <a href="mailto:zaptrone.designs@gmail.com">our mail</a> also include star rating out of 5.
+</div>
+</div>
 
 
 
@@ -1201,7 +1301,7 @@ window.addEventListener("load", () => {
     return;
   }
 
-  loadLeaderboard(); // only run if logged in
+  loadReviews();
 });
 
 const hamburger = document.getElementById('hamburger');
@@ -1217,6 +1317,7 @@ hamburger.addEventListener('click',()=>{
 
 const mobileLinks =
 document.querySelectorAll('.mobile-menu a');
+const mobileClose = document.getElementById('mobileClose');
 
 mobileLinks.forEach(link=>{
 
@@ -1226,6 +1327,10 @@ mobileLinks.forEach(link=>{
 
   });
 
+});
+
+mobileClose.addEventListener('click',()=>{
+  mobileMenu.classList.remove('active');
 });
 
 const track = document.getElementById('carouselTrack');
@@ -1239,6 +1344,37 @@ const modes = [
   'mode-spot',
   'mode-hangman',
   'mode-comingsoon'
+];
+
+const reviews = [
+    {
+    username:'Katie',
+    avatar:'assets/cat/catlogo.png',
+    stars:5,
+    date:'May 21, 2026',
+    text:'The game was entertaining to play and very nice :3'
+  },
+  {
+    username:'Arlene',
+    avatar:'assets/cat/catlogo.png',
+    stars:5,
+    date:'May 23, 2026',
+    text:'wow! if u see this is a most entertaining way to learn english, i think everyone should play this game, not only kids. my lil sis loves it! '
+  },
+  {
+    username:'S',
+    avatar:'assets/cat/catlogo.png',
+    stars:5,
+    date:'May 22, 2026',
+    text:'app romba useful ah iruku, especially English improve panna helpful ah iruku easy to understand. Learning experience smooth ah iruku, Good job, beginners-ku romba helpful app'
+  },
+  {
+    username:'hsn',
+    avatar:'assets/cat/catlogo.png',
+    stars:4,
+    date:'May 22, 2026',
+    text:'Good 👍🏿, Could improve the hangman keyboard 😘'
+  }
 ];
 
 let currentIndex = 0;
@@ -1271,6 +1407,30 @@ function loadProfile(){
     <p>Hangman Plays: ${stats.hangman.plays}</p>
     <p>Hangman Best: ${stats.hangman.best}</p>
   `;
+}
+
+function loadReviews(){
+  const reviewsGrid = document.getElementById('reviewsGrid');
+  if (!reviewsGrid) return;
+
+  reviewsGrid.innerHTML = reviews.map(review => {
+    const stars = '★'.repeat(review.stars) + '☆'.repeat(5 - review.stars);
+    return `
+      <div class="review-card">
+        <div class="review-header">
+          <div class="review-author">
+            <img src="${review.avatar}" alt="${review.username} avatar" class="review-avatar" />
+            <div class="review-meta">
+              <div class="review-name">${review.username}</div>
+              <div class="review-date">${review.date}</div>
+            </div>
+          </div>
+          <div class="review-stars">${stars}</div>
+        </div>
+        <div class="review-text">${review.text}</div>
+      </div>
+    `;
+  }).join('');
 }
 
 
