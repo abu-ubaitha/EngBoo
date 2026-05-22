@@ -7,6 +7,36 @@
 
 <style>
 
+.cat-mascot{
+
+  position:absolute;
+
+  top:10px;
+
+  left:35%;
+
+  transform:translateX(-50%);
+
+  z-index:10;
+
+  pointer-events:none;
+
+  filter:
+  drop-shadow(0 12px 24px rgba(0,0,0,0.2));
+
+  animation:
+  floatCat 3s ease-in-out infinite;
+
+}
+
+.cat-mascot img{
+
+  width:140px;
+
+  display:block;
+
+}
+
 :root{
   --primary:#0e257a;
   --secondary:#F3BE7A;
@@ -48,7 +78,8 @@ body{
   box-shadow:0 20px 50px rgba(0,0,0,0.15);
   text-align:center;
   position:relative;
-  overflow:hidden;
+  overflow:visible;
+  margin-top:120px;
 }
 
 .back-btn{
@@ -341,10 +372,35 @@ h1{
 
 }
 
+.cat-message{
+  margin-top:0.4rem;
+  font-weight:700;
+  color:#0e257a;
+  min-height:24px;
+}
+
+@keyframes floatCat{
+
+  0%{
+    transform:translateY(0px);
+  }
+
+  50%{
+    transform:translateY(-8px);
+  }
+
+  100%{
+    transform:translateY(0px);
+  }
+
+}
+
 </style>
 </head>
 <body>
-
+<div class="cat-mascot">
+  <img id="cat-img" src="assets/cat/sitting-cat.png">
+</div>
 <div id="countdown-screen">
   <div id="countdown-number">
     TAP TO START
@@ -361,10 +417,12 @@ h1{
 
 <h1>🎯 Hangman</h1>
 
+
+
 <div class="top-bar">
 
 <div class="stat">
-⭐ Coins:
+🐟 Fishes:
 <span id="coins">0</span>
 </div>
 
@@ -387,6 +445,12 @@ h1{
 <span class="heart">❤️</span>
 <span class="heart">❤️</span>
 <span class="heart">❤️</span>
+<span class="heart">❤️</span>
+<span class="heart">❤️</span>
+<span class="heart">❤️</span>
+
+
+
 </div>
 
 </div>
@@ -402,7 +466,7 @@ Hint goes here
 </div>
 
 <button class="reveal-btn" onclick="revealLetter()">
-💡 Reveal Letter (-5 Coins)
+💡 Reveal Letter (-5 Fishes)
 </button>
 
 <div class="keyboard" id="keyboard"></div>
@@ -452,6 +516,27 @@ preload="auto">
 id="tap-sound"
 src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3">
 </audio>
+
+<audio
+id="cat-happy-sound"
+src="assets/sounds/cat-happy.mp3">
+</audio>
+
+<audio
+id="cat-sad-sound"
+src="assets/sounds/cat-sad.wav">
+</audio>
+
+<audio
+id="coin-sound"
+src="assets/sounds/coin.wav">
+</audio>
+
+<audio
+id="cat-scream-sound"
+src="assets/sounds/cat-scream.wav">
+</audio>
+
 <script src="storage.js"></script>
 <script>
 
@@ -475,6 +560,7 @@ document.getElementById("lose-sound");
 
 const winSound =
 document.getElementById("win-sound");
+
 
 clickSound.volume = 0.28;   // louder tap sound
 correctSound.volume = 0.18;
@@ -801,7 +887,7 @@ example:"It was just a misunderstanding."
 
 let score = 0;
 let level = 1;
-let hearts = 3;
+let hearts = 6;
 let coins = 0;
 let streak = 0;
 
@@ -895,7 +981,10 @@ function getDifficultyWords(){
 
 }
 
+
 function startGame(){
+
+  updateCatMood("start");
 
   gameEnded = false;
 
@@ -1023,44 +1112,52 @@ function guessLetter(letter,button){
 
   if(currentWord.includes(letter)){
 
+    updateCatMood("correct");
+
     button.classList.add("correct");
 
-guessedLetters.push(letter);
+    guessedLetters.push(letter);
 
-renderWord();
+    renderWord();
 
-/* CHECK IF THIS LETTER FINISHES THE WORD */
+    /* CHECK IF THIS LETTER FINISHES THE WORD */
 
-const uniqueLetters =
-[...new Set(currentWord.split(""))];
+    const uniqueLetters =
+    [...new Set(currentWord.split(""))];
 
-const won =
-uniqueLetters.every(l =>
-guessedLetters.includes(l));
+    const won =
+    uniqueLetters.every(l =>
+    guessedLetters.includes(l));
 
-if(won){
+    if(won){
 
-  checkWin();
+      checkWin();
 
-}
+    }
 
-else{
+    else{
 
-  correctSound.currentTime = 0;
+      catHappySound.currentTime = 0;
 
-  correctSound.play().catch(()=>{});
+      catHappySound.play().catch(()=>{});
 
-}
+    }
 
   }
 
   else{
 
+    updateCatMood("wrong");
+
     button.classList.add("wrong");
 
     wrongSound.pause();
+
     wrongSound.currentTime = 0;
-    wrongSound.play().catch(()=>{});
+
+    catSadSound.currentTime = 0;
+
+    catSadSound.play().catch(()=>{});
 
     hearts--;
 
@@ -1077,6 +1174,7 @@ else{
     if(hearts <= 0){
 
       endGame();
+
     }
 
   }
@@ -1095,7 +1193,7 @@ function checkWin(){
   if(won){
 
 gameContainer.classList.add("correct-flash");
-
+updateCatMood("win");
 setTimeout(() => {
 
   gameContainer.classList.remove("correct-flash");
@@ -1110,7 +1208,10 @@ winSound.currentTime = 0;
 
 winSound.volume = 0.45;
 
-const playPromise = winSound.play();
+coinSound.currentTime = 0;
+
+const playPromise =
+coinSound.play();
 
 if(playPromise !== undefined){
 
@@ -1283,7 +1384,7 @@ timeoutSound.play().catch(()=>{});
 }
 
 function endGame(){
-
+updateCatMood("lose");
   gameEnded = true;
 
   clearInterval(timerInterval);
@@ -1294,7 +1395,8 @@ function endGame(){
   loseSound.pause();
   loseSound.currentTime = 0;
 
-  loseSound.play().catch(()=>{});
+  catScreamSound.currentTime = 0;
+catScreamSound.play().catch(()=>{});
 
   // HIDE GAME UI
   hintElement.style.display = "none";
@@ -1365,7 +1467,7 @@ function restartGame(){
 
   score = 0;
   level = 1;
-  hearts = 3;
+  hearts = 6;
   coins = 0;
   streak = 0;
 
@@ -1596,6 +1698,64 @@ document
   once:true
 });
 
+function updateCatMood(type){
+
+  const cat =
+  document.getElementById("cat-img");
+
+  if(type === "correct"){
+
+    cat.src =
+    "assets/cat/mouth-slightly-open-cat.png";
+
+  }
+
+  else if(type === "wrong"){
+
+    cat.src =
+    "assets/cat/shocked-cat.png";
+
+  }
+
+  else if(type === "win"){
+
+    cat.src =
+    "assets/cat/sitting-cat.png";
+
+  }
+
+  else if(type === "lose"){
+
+    cat.src =
+    "assets/cat/passedout-cat.png";
+
+  }
+
+  else{
+
+    cat.src =
+    "assets/cat/mouth-slightly-open-cat.png";
+
+  }
+
+}
+
+const catHappySound =
+document.getElementById("cat-happy-sound");
+
+const catSadSound =
+document.getElementById("cat-sad-sound");
+
+const coinSound =
+document.getElementById("coin-sound");
+
+const catScreamSound =
+document.getElementById("cat-scream-sound");
+
+catHappySound.volume = 0.18;
+catSadSound.volume = 0.18;
+coinSound.volume = 0.20;
+catScreamSound.volume = 0.22;
 
 </script>
 

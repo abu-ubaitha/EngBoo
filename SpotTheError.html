@@ -7,6 +7,65 @@
 
 <style>
 
+.spot-cat{
+
+  width:30%;
+
+  position:absolute;
+
+  top:10%;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  z-index:5;
+
+  pointer-events:none;
+
+  filter:
+  drop-shadow(0 12px 24px rgba(0,0,0,0.2));
+
+  animation:
+  catFloat 3s ease-in-out infinite;
+
+  transition:
+  opacity 0.35s ease,
+  transform 0.35s ease;
+
+}
+
+@keyframes catFloat{
+
+  0%{
+    transform:
+    translateX(-50%)
+    translateY(0px);
+  }
+
+  50%{
+    transform:
+    translateX(-50%)
+    translateY(-8px);
+  }
+
+  100%{
+    transform:
+    translateX(-50%)
+    translateY(0px);
+  }
+
+}
+
+.gameover-cat{
+
+  width:160px;
+
+  margin-bottom:10px;
+
+  filter:
+  drop-shadow(0 12px 24px rgba(0,0,0,0.2));
+
+}
 
 :root{
   --primary:#0e257a;
@@ -409,6 +468,13 @@ body{
 
 <canvas id="confetti"></canvas>
 
+<img
+  src="assets/cat/mouth-slightly-open-cat.png"
+  alt="Game Cat"
+  class="spot-cat"
+  id="spotCat"
+>
+
 <div class="game-container" id="game-container">
 
 <a href="index.html" class="back-btn">
@@ -477,6 +543,12 @@ Submit
 
 <div class="game-over" id="game-over">
 
+<img
+  src="assets/cat/passedout-cat.png"
+  alt="Passed Out Cat"
+  class="gameover-cat"
+>
+  
 <h2>Game Over!</h2>
 
 <p>Your Score</p>
@@ -502,15 +574,15 @@ src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3">
 </audio>
 
 <audio id="correct-sound"
-src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3">
+src="assets\sounds\cat-happy.mp3">
 </audio>
 
 <audio id="wrong-sound"
-src="https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3">
+src="assets\sounds\cat-sad.wav">
 </audio>
 
 <audio id="streak-sound"
-src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3">
+src="assets\sounds\coin.wav">
 </audio>
 
 <audio id="timeout-sound"
@@ -518,7 +590,22 @@ src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3">
 </audio>
 
 <audio id="lose-sound"
-src="https://assets.mixkit.co/active_storage/sfx/2220/2220-preview.mp3">
+src="assets\sounds\cat-scream.wav">
+</audio>
+
+<audio
+id="cat-happy-sound"
+src="assets/sounds/cat-happy.mp3">
+</audio>
+
+<audio
+id="cat-sad-sound"
+src="assets/sounds/cat-sad.wav">
+</audio>
+
+<audio
+id="cat-scream-sound"
+src="assets/sounds/cat-scream.wav">
 </audio>
 
 <script src="storage.js"></script>
@@ -537,7 +624,10 @@ document.getElementById("lose-sound");
 clickSound.volume = 0.08;
 loseSound.volume = 0.15;
 
+const spotCat =document.getElementById("spotCat");
+
 const questions = [
+
 
 
 /* EASY */
@@ -873,6 +963,27 @@ function unlockAudio(){
 
 }
 
+function updateCatMood(){
+
+  if(hearts === 2){
+
+    spotCat.src =
+    "assets/cat/shocked-cat.png";
+  }
+
+  else if(hearts === 1){
+
+    spotCat.src =
+    "assets/cat/sad-cat.png";
+  }
+
+  else{
+
+    spotCat.src =
+    "assets/cat/mouth-slightly-open-cat.png";
+  }
+
+}
 
 function getQuestion(){
 
@@ -1198,7 +1309,7 @@ correctSound.pause();
 
 correctSound.currentTime = 0;
 
-correctSound.play()
+catHappySound.play()
 .catch(() => {});
 
   gameContainer.classList.add("correct-flash");
@@ -1283,9 +1394,9 @@ function handleWrong(){
 
   // LAST HEART LOST
   if(hearts <= 0){
+catSadSound.currentTime = 0;
+catSadSound.play();
 
-    loseSound.pause();
-    loseSound.currentTime = 0;
 
     loseSound.play().catch(() => {});
 
@@ -1326,6 +1437,8 @@ function updateHearts(){
     }
 
   });
+
+  updateCatMood();
 
 }
 
@@ -1383,14 +1496,16 @@ updateScore("spot", score);
 
   loseSound.play().catch(() => {});
 
+  spotCat.style.transition = "none";
+  spotCat.style.opacity = "0";
+
   document.getElementById("game-area").style.display = "none";
 
   document.getElementById("game-over").style.display = "block";
 
   document.getElementById("final-score").textContent = score;
 
-document.getElementById("explanation").innerHTML =
-currentQuestion
+document.getElementById("explanation").innerHTML = currentQuestion
 ? `❌ ${currentQuestion.explanation}`
 : `❌ No explanation available`;
 
@@ -1415,6 +1530,10 @@ function restartGame(){
   hearts = 3;
   streak = 0;
 
+spotCat.style.opacity = "1";
+
+updateCatMood();
+
   scoreElement.textContent = score;
   levelElement.textContent = level;
 
@@ -1426,6 +1545,8 @@ function restartGame(){
   .forEach(h => h.classList.remove("lost"));
 
   getQuestion();
+
+  
 
 }
 
@@ -1611,6 +1732,21 @@ if(correctionInput){
   });
 
 }
+
+updateCatMood();
+
+const catHappySound =
+document.getElementById("cat-happy-sound");
+
+const catSadSound =
+document.getElementById("cat-sad-sound");
+
+const catScreamSound =
+document.getElementById("cat-scream-sound");
+
+catHappySound.volume = 0.18;
+catSadSound.volume = 0.18;
+catScreamSound.volume = 0.22;
 
 </script>
 

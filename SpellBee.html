@@ -7,6 +7,74 @@
 
 <style>
 
+.spellbee-cat{
+
+  width:30%;
+
+  position:absolute;
+
+  top:1%;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  z-index:5;
+
+  pointer-events:none;
+
+  filter:
+  drop-shadow(0 12px 24px rgba(0,0,0,0.2));
+
+  animation:
+  catFloat 3s ease-in-out infinite;
+
+  transition:
+  opacity 0.35s ease,
+  transform 0.35s ease;
+
+}
+
+@keyframes catFloat{
+
+  0%{
+    transform:
+    translateX(-50%)
+    translateY(0px);
+  }
+
+  50%{
+    transform:
+    translateX(-50%)
+    translateY(-8px);
+  }
+
+  100%{
+    transform:
+    translateX(-50%)
+    translateY(0px);
+  }
+
+}
+
+.lives{
+
+  font-size:1.5rem;
+
+  margin-bottom:1rem;
+
+}
+
+.gameover-cat{
+
+  width:160px;
+
+  margin-bottom:10px;
+
+  filter:
+  drop-shadow(0 12px 24px rgba(0,0,0,0.2));
+
+}
+
 :root{
   --primary:#0e257a;
   --secondary:#F3BE7A;
@@ -251,9 +319,7 @@ button:hover{
 </head>
 <body>
 
-<a href="index.html" class="back-btn">
-  ←
-</a>
+
 
 <div id="countdown-screen">
   <div id="countdown-number">
@@ -263,8 +329,17 @@ button:hover{
 
 <canvas id="confetti"></canvas>
 
-<div class="game-container">
+<img
+  src="assets/cat/mouth-slightly-open-cat.png"
+  alt="Game Cat"
+  class="spellbee-cat"
+  id="spellbeeCat"
+>
 
+<div class="game-container">
+<a href="index.html" class="back-btn">
+  ←
+</a>
   <div id="game-area">
 
     <h1>🐝 Spell Bee</h1>
@@ -276,6 +351,10 @@ button:hover{
     <div class="level">
       Level: <span id="level">1</span>
     </div>
+
+    <div class="lives" id="lives">
+  ❤️ ❤️ ❤️
+</div>
 
     <div class="timer">
       ⏳ Time Left:
@@ -309,6 +388,12 @@ button:hover{
   </div>
 
   <div class="game-over" id="game-over">
+
+<img
+  src="assets/cat/passedout-cat.png"
+  alt="Passed Out Cat"
+  class="gameover-cat"
+>
 
     <h2>Game Over!</h2>
 
@@ -345,7 +430,7 @@ src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3">
 
 <audio
 id="wrong-sound"
-src="https://assets.mixkit.co/active_storage/sfx/2220/2220-preview.mp3">
+src="assets\sounds\cat-sad.wav">
 </audio>
 
 <audio
@@ -356,6 +441,16 @@ src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3">
 <audio
 id="timeout-sound"
 src="https://assets.mixkit.co/active_storage/sfx/254/254-preview.mp3">
+</audio>
+
+<audio
+id="cat-happy-sound"
+src="assets/sounds/cat-happy.mp3">
+</audio>
+
+<audio
+id="cat-scream-sound"
+src="assets/sounds/cat-scream.wav">
 </audio>
 
 <script src="storage.js"></script>
@@ -467,6 +562,7 @@ let currentWord = "";
 let timer = 10;
 let timerInterval;
 let replayLimit = 2;
+let lives = 3;
 let usedWords = [];
 
 const scoreElement = document.getElementById("score");
@@ -475,6 +571,8 @@ const answerInput = document.getElementById("answer");
 const wordElement = document.getElementById("word");
 const timeElement = document.getElementById("time");
 const replayElement = document.getElementById("replays");
+const livesElement = document.getElementById("lives");
+const spellbeeCat = document.getElementById("spellbeeCat");
 
 const gameContainer = document.querySelector(".game-container");
 
@@ -487,6 +585,31 @@ correctSound.volume = 0.18;
 wrongSound.volume = 0.18;
 streakSound.volume = 0.15;
 timeoutSound.volume = 0.15;
+
+function updateLivesUI(){
+
+  livesElement.textContent =
+    "❤️".repeat(lives);
+
+  if(lives === 2){
+
+    spellbeeCat.src =
+    "assets/cat/shocked-cat.png";
+  }
+
+  else if(lives === 1){
+
+    spellbeeCat.src =
+    "assets/cat/sad-cat.png";
+  }
+
+  else{
+
+    spellbeeCat.src =
+    "assets/cat/mouth-slightly-open-cat.png";
+  }
+
+}
 
 function unlockAudio(){
 
@@ -603,17 +726,31 @@ function startTimer(){
       timeoutSound.currentTime = 0;
       timeoutSound.play();
 
-      streak = 0;
+streak = 0;
 
-      gameContainer.classList.add("wrong-shake");
+lives--;
 
-      setTimeout(() => {
+updateLivesUI();
 
-        gameContainer.classList.remove("wrong-shake");
+gameContainer.classList.add("wrong-shake");
 
-        endGame();
+setTimeout(() => {
 
-      },500);
+  gameContainer.classList.remove("wrong-shake");
+
+  if(lives <= 0){
+
+    endGame();
+
+  }
+
+  else{
+
+    getWord();
+
+  }
+
+},500);
     }
 
   },1000);
@@ -654,8 +791,8 @@ function checkAnswer(){
 
     clearInterval(timerInterval);
 
-    correctSound.currentTime = 0;
-    correctSound.play();
+catHappySound.currentTime = 0;
+catHappySound.play();
 
     gameContainer.classList.add("correct-flash");
 
@@ -689,20 +826,36 @@ function checkAnswer(){
 
   else{
 
-    streak = 0;
+streak = 0;
 
-    wrongSound.currentTime = 0;
-    wrongSound.play();
+lives--;
 
-    gameContainer.classList.add("wrong-shake");
+updateLivesUI();
 
-    setTimeout(() => {
+wrongSound.currentTime = 0;
+wrongSound.play();
 
-      gameContainer.classList.remove("wrong-shake");
+gameContainer.classList.add("wrong-shake");
 
-      endGame();
+setTimeout(() => {
 
-    },500);
+  gameContainer.classList.remove("wrong-shake");
+
+  if(lives <= 0){
+
+    endGame();
+
+  }
+
+  else{
+
+    answerInput.value = "";
+
+    getWord();
+
+  }
+
+},500);
   }
 }
 
@@ -711,7 +864,8 @@ function endGame(){
   clearInterval(timerInterval);
 
 updateScore("spellbee", score);
-
+spellbeeCat.style.transition = "none";
+spellbeeCat.style.opacity = "0";
   document.getElementById("game-area").style.display = "none";
 
   document.getElementById("game-over").style.display = "block";
@@ -720,6 +874,9 @@ updateScore("spellbee", score);
 
   document.getElementById("correct-word").textContent =
     currentWord;
+catScreamSound.currentTime = 0;
+catScreamSound.play();
+
 }
 
 function restartGame(){
@@ -728,6 +885,12 @@ function restartGame(){
   score = 0;
   level = 1;
   streak = 0;
+lives = 3;
+
+updateLivesUI();
+
+spellbeeCat.style.opacity = "1";
+
 usedWords = [];
   scoreElement.textContent = score;
   levelElement.textContent = level;
@@ -936,6 +1099,17 @@ document
 },{
   once:true
 });
+
+updateLivesUI();
+
+const catHappySound =
+document.getElementById("cat-happy-sound");
+
+const catScreamSound =
+document.getElementById("cat-scream-sound");
+
+catHappySound.volume = 0.18;
+catScreamSound.volume = 0.22;
 
 </script>
 
