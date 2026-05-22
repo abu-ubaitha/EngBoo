@@ -704,7 +704,73 @@ options:["eat","eats","eating","ate"],
 difficulty:1
 },
 
+{
+sentence:"He go to school daily.",
+wrong:["go"],
+answers:["goes"],
+explanation:"He/she/it uses 'goes'.",
+options:["go","goes","went","going"],
+difficulty:1
+},
+{
+sentence:"She eat rice every day.",
+wrong:["eat"],
+answers:["eats"],
+explanation:"Third person singular uses 'eats'.",
+options:["eat","eats","ate","eating"],
+difficulty:1
+},
+{
+sentence:"They plays football.",
+wrong:["plays"],
+answers:["play"],
+explanation:"Plural subject uses base verb.",
+options:["play","plays","playing","played"],
+difficulty:1
+},
+{
+sentence:"I goes to market.",
+wrong:["goes"],
+answers:["go"],
+explanation:"I uses 'go'.",
+options:["go","goes","went","gone"],
+difficulty:1
+},
+{
+sentence:"She have a pen.",
+wrong:["have"],
+answers:["has"],
+explanation:"She uses 'has'.",
+options:["have","has","had","having"],
+difficulty:1
+},
+
 /* MEDIUM */
+
+{
+sentence:"She was cooking when I was call her.",
+wrong:["call"],
+answers:["called"],
+explanation:"Past continuous + past simple mismatch.",
+options:["call","called","calling","calls"],
+difficulty:2
+},
+{
+sentence:"They has finished their work yesterday.",
+wrong:["has"],
+answers:["have"],
+explanation:"Plural subject uses 'have'.",
+options:["has","have","had","having"],
+difficulty:2
+},
+{
+sentence:"I didn't went there.",
+wrong:["went"],
+answers:["go"],
+explanation:"After did/didn't use base verb.",
+options:["go","went","gone","going"],
+difficulty:2
+},
 
 {
 sentence:"He go to school and eat lunch yesterday.",
@@ -762,6 +828,23 @@ difficulty:2
 
 
 /* HARD */
+
+{
+sentence:"She is one of the best player in the team.",
+wrong:["player"],
+answers:["players"],
+explanation:"'One of the' requires plural noun.",
+options:["player","players","playing","played"],
+difficulty:3
+},
+{
+sentence:"He suggested me to go home.",
+wrong:["to"],
+answers:["going"],
+explanation:"Correct: suggested + verb-ing.",
+options:["to","for","going","go"],
+difficulty:3
+},
 
 {
 sentence:"Neither of the boys were prepared for the competition.",
@@ -843,6 +926,15 @@ wrong:["childrens","was"],
 answers:["children","were"],
 explanation:"Correct plural is 'children' and use 'were'.",
 options:["children","were","was","childs"],
+difficulty:4
+},
+
+{
+sentence:"Had I knew this earlier, I would help you.",
+wrong:["knew","help"],
+answers:["known","have helped"],
+explanation:"Mixed conditional requires correct structure.",
+options:["knew","known","help","have helped"],
 difficulty:4
 },
 
