@@ -97,14 +97,42 @@ function logout(){
 function requireLogin() {
   const data = getData();
   if (!data.currentUser) {
-    window.location.href = "Login.html";
+    window.location.href = "login.html";
   }
   return data.currentUser;
 }
 
 window.addEventListener("load", () => {
-  requireLogin();
-  loadLeaderboard();
+
+  const page =
+  window.location.pathname
+  .split("/")
+  .pop()
+  .toLowerCase();
+
+  // PAGES THAT DON'T NEED LOGIN
+
+  const publicPages = [
+    "login.html",
+    "register.html"
+  ];
+
+  // ONLY PROTECT PRIVATE PAGES
+
+  if(!publicPages.includes(page)){
+
+    requireLogin();
+
+  }
+
+  // LOAD LEADERBOARD ONLY IF EXISTS
+
+  if(typeof loadLeaderboard === "function"){
+
+    loadLeaderboard();
+
+  }
+
 });
 
 
