@@ -7,13 +7,14 @@
 
 <style>
 
+/* Default = PC/Desktop */
 .spellbee-cat{
 
-  width:30%;
+  width:10%;
 
   position:absolute;
 
-  top:1%;
+  top:0%;
   left:50%;
 
   transform:translateX(-50%);
@@ -31,6 +32,15 @@
   transition:
   opacity 0.35s ease,
   transform 0.35s ease;
+
+}
+
+/* Mobile */
+@media (max-width: 768px){
+
+  .spellbee-cat{
+    width:45%;
+  }
 
 }
 

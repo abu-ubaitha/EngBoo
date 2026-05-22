@@ -7,17 +7,19 @@
 
 <style>
 
-.cat-mascot{
+/* Default = PC/Desktop */
+.spellbee-cat{
+
+  width:10%;
 
   position:absolute;
 
-  top:10px;
-
-  left:35%;
+  top:0%;
+  left:50%;
 
   transform:translateX(-50%);
 
-  z-index:10;
+  z-index:5;
 
   pointer-events:none;
 
@@ -25,7 +27,21 @@
   drop-shadow(0 12px 24px rgba(0,0,0,0.2));
 
   animation:
-  floatCat 3s ease-in-out infinite;
+  catFloat 3s ease-in-out infinite;
+
+  transition:
+  opacity 0.35s ease,
+  transform 0.35s ease;
+
+}
+
+/* Mobile */
+@media (max-width: 768px){
+
+  .spellbee-cat{
+    width:45%;
+    
+  }
 
 }
 
@@ -398,9 +414,7 @@ h1{
 </style>
 </head>
 <body>
-<div class="cat-mascot">
-  <img id="cat-img" src="assets/cat/sitting-cat.png">
-</div>
+
 <div id="countdown-screen">
   <div id="countdown-number">
     TAP TO START
@@ -410,7 +424,9 @@ h1{
 <canvas id="confetti"></canvas>
 
 <div class="game-container" id="game-container">
-
+<div class="cat-mascot">
+  <img id="cat-img" src="assets/cat/sitting-cat.png">
+</div>
 <a href="index.html" class="back-btn">
 ←
 </a>

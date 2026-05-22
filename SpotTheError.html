@@ -7,13 +7,14 @@
 
 <style>
 
+/* Default = PC/Desktop */
 .spot-cat{
 
-  width:30%;
+  width:10%;
 
   position:absolute;
 
-  top:10px;
+  top:5%;
   left:50%;
 
   transform:translateX(-50%);
@@ -31,6 +32,15 @@
   transition:
   opacity 0.35s ease,
   transform 0.35s ease;
+
+}
+
+/* Mobile */
+@media (max-width: 768px){
+
+  .spot-cat{
+    width:45%;
+  }
 
 }
 
@@ -468,13 +478,13 @@ body{
 
 <canvas id="confetti"></canvas>
 
+
 <img
   src="assets/cat/mouth-slightly-open-cat.png"
   alt="Game Cat"
   class="spot-cat"
   id="spotCat"
 >
-
 <div class="game-container" id="game-container">
 
 <a href="index.html" class="back-btn">
