@@ -236,44 +236,95 @@ async function getLeaderboard(game){
 
 }
 
-      score: score,
+     async function getLeaderboard(game){
 
-      plays: stats?.plays || 0,
+  const { data, error } =
+  await supabaseClient
+    .from("leaderboard")
+    .select("*")
+    .eq("game", game)
+    .order("score", {
+      ascending:false
+    })
+    .limit(10);
 
-      joinedAt: user.joinedAt,
+  if(error){
+
+    console.error(error);
+    return [];
+
+  }
+
+  // ADD EXTRA UI DATA
+
+  return data.map(player => {
+
+    let level = "Rookie";
+
+    if(player.score >= 300){
+      level = "Legend";
+    }
+
+    else if(player.score >= 200){
+      level = "Master";
+    }
+
+    else if(player.score >= 100){
+      level = "Pro";
+    }
+
+    else if(player.score >= 50){
+      level = "Skilled";
+    }
+
+    return {
+
+      id: player.id,
+
+      username: player.username,
+
+      avatar:'assets/cat/catlogo.png',
+
+      score: player.score,
 
       level: level,
 
-      xp: score * 3,
+      xp: player.score * 3,
 
-      coins: Math.floor(score / 2),
+      coins: Math.floor(player.score / 2),
 
-      totalScore: score,
+      totalScore: player.score,
 
-      winStreak: Math.floor(score / 15),
+      winStreak: Math.floor(player.score / 15),
 
       country: "India",
 
-      accuracy: Math.min(100, 55 + Math.floor(score / 8)) + "%",
+      accuracy:
+      Math.min(
+        100,
+        55 + Math.floor(player.score / 8)
+      ) + "%",
 
-      gamesPlayed: stats?.plays || 0,
+      gamesPlayed: Math.floor(player.score / 5),
 
       favorite: game,
 
       badges: [
+
         level + " Rank",
-        score >= 100 ? "🔥 High Scorer" : "🎮 New Challenger",
-        stats?.plays >= 10 ? "⚡ Active Player" : "🌱 Beginner"
+
+        player.score >= 100
+        ? "🔥 High Scorer"
+        : "🎮 New Challenger",
+
+        player.score >= 50
+        ? "⚡ Active Player"
+        : "🌱 Beginner"
+
       ]
 
-    });
+    };
 
-  }
-
-  leaderboard.sort(
-    (a,b)=> b.score - a.score
-  );
-
-  return leaderboard;
+  });
 
 }
