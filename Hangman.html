@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hangman Game</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
 
 <style>
 
@@ -746,6 +748,43 @@ definition:"A colorful arc in the sky.",
 example:"We saw a rainbow yesterday."
 },
 
+{
+word:"river",
+hint:"flows to the sea",
+definition:"A large natural stream of water.",
+example:"The river is calm."
+},
+{
+word:"movie",
+hint:"a film to watch",
+definition:"A story recorded on camera for viewing.",
+example:"We watched a movie tonight."
+},
+{
+word:"pizza",
+hint:"savory flatbread",
+definition:"A dish with cheese and toppings on dough.",
+example:"He ordered a pizza."
+},
+{
+word:"socks",
+hint:"worn on feet",
+definition:"Soft coverings worn on feet.",
+example:"Her socks are warm."
+},
+{
+word:"clock",
+hint:"tells the time",
+definition:"A device for showing the time of day.",
+example:"The clock struck noon."
+},
+{
+word:"bread",
+hint:"baked grain food",
+definition:"A staple food made from flour and water.",
+example:"She sliced the bread."
+},
+
 /* MEDIUM */
 
 {
@@ -877,6 +916,43 @@ word:"airplane",
 hint:"Flies in the sky",
 definition:"A powered flying vehicle.",
 example:"The airplane landed safely."
+},
+
+{
+word:"camera",
+hint:"captures photos",
+definition:"A device used to take pictures.",
+example:"She used a camera on vacation."
+},
+{
+word:"jacket",
+hint:"keeps you warm",
+definition:"A piece of clothing worn on the upper body.",
+example:"He wore a jacket when it was cold."
+},
+{
+word:"library",
+hint:"houses many books",
+definition:"A place where books are kept for reading.",
+example:"She studies at the library."
+},
+{
+word:"planet",
+hint:"orbits the sun",
+definition:"A celestial body moving around a star.",
+example:"Earth is a planet."
+},
+{
+word:"bicycle",
+hint:"ride with two wheels",
+definition:"A vehicle with two wheels powered by pedaling.",
+example:"He rode his bicycle to the park."
+},
+{
+word:"forest",
+hint:"filled with trees",
+definition:"A large area covered chiefly with trees and undergrowth.",
+example:"The forest was full of birds."
 },
 
 /* HARD */
@@ -1164,13 +1240,13 @@ function getDifficultyWords(){
 
   if(level <= 3){
 
-    return words.slice(0,2);
+    return words.slice(0,16);
 
   }
 
   else if(level <= 6){
 
-    return words.slice(0,3);
+    return words.slice(0,28);
 
   }
 
@@ -1223,11 +1299,11 @@ function startGame(){
 
   usedWords.push(selected.word);
 
-  // KEEP ONLY LAST 15 WORDS
+  // ONLY RESET AFTER ALL AVAILABLE WORDS HAVE BEEN USED
 
-  if(usedWords.length > 15){
+  if (usedWords.length >= available.length) {
 
-    usedWords.shift();
+    usedWords = [];
   }
 
   currentWord =

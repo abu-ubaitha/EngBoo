@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profile</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
 
 <style>
 body{
@@ -58,6 +60,15 @@ button{
   border-radius:12px;
   text-align:left;
 }
+
+.logo
+{
+  margin-bottom:20px;
+  position:center;
+  display:flex;
+  align-items:center;
+}
+
 </style>
 </head>
 
@@ -65,7 +76,7 @@ button{
 
 <div class="card">
 <h1>Profile</h1>
-  <h1><img src="assets/cat/catlogo.png" alt="Logo" class="logo" style="width:30%;"></h1>
+<img src="assets/cat/catlogo.png" alt="Logo" class="logo" style="width:50%;">
   <div id="profile"></div>
 
   <div>
@@ -76,6 +87,10 @@ button{
 </div>
 
 <script src="storage.js"></script>
+<script src="questions/spellbee.js"></script>
+<script src="questions/hangman.js"></script>
+<script src="questions/spot.js"></script>
+<script src="app.js"></script>
 
 <script>
 function loadProfile(){

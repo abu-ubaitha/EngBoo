@@ -9,7 +9,9 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
 
 <style>
 
@@ -19,12 +21,62 @@
   box-sizing:border-box;
 }
 
+h1,h2,h3,p,a,button{
+  word-wrap:break-word;
+}
+
+img{
+  max-width:100%;
+  height:auto;
+}
+
+@media(max-width:1200px){
+
+  .hero{
+    padding-top:140px;
+  }
+
+  .hero h1{
+    font-size:5rem;
+  }
+
+  .game-card{
+    padding:36px;
+  }
+
+}
+
+nav{
+  padding:16px;
+}
+
+.logo{
+  font-size:1.5rem;
+}
+
+.logo-cat{
+  width:42px;
+  height:42px;
+}
+
+@media(max-width:900px){
+
+  .carousel-wrapper{
+    width:100%;
+  }
+
+  .game-card{
+    min-height:420px;
+  }
+
+}
+
 html{
   scroll-behavior:smooth;
 }
 
 body{
-  font-family:'Baloo 2',sans-serif;
+  font-family:'Lexend',sans-serif;
 overflow-x:hidden;
 width:100%;
 max-width:100vw;
@@ -68,6 +120,10 @@ body.mode-spellbee{
     );
 
   color:white;
+  --lb-primary:#ffb43f;
+  --lb-secondary:#ff6258;
+  --lb-soft:rgba(255,185,80,0.18);
+  --lb-stroke:#ffd874;
 }
 
 body.mode-spot{
@@ -81,6 +137,10 @@ body.mode-spot{
     );
 
   color:white;
+  --lb-primary:#4fd5ff;
+  --lb-secondary:#2d8cff;
+  --lb-soft:rgba(79,213,255,0.18);
+  --lb-stroke:#9becff;
 }
 
 body.mode-hangman{
@@ -94,6 +154,10 @@ body.mode-hangman{
     );
 
   color:white;
+  --lb-primary:#d18cff;
+  --lb-secondary:#c135ff;
+  --lb-soft:rgba(209,140,255,0.18);
+  --lb-stroke:#f3b6ff;
 }
 
 body.mode-comingsoon{
@@ -141,8 +205,8 @@ nav{
 
 .logo-cat{
 
-  width:52px;
-  height:52px;
+  width:100%;
+  height:100%;
 
   object-fit:contain;
 
@@ -255,7 +319,7 @@ nav{
 }
 
 .mobile-close:hover{
-  background:rgba(255,255,255,0.24);
+  background:rgba(255, 0, 0, 1);
   transform:scale(1.02);
 }
 
@@ -608,6 +672,553 @@ nav{
 
 .arrow-right{
   right:-70px;
+}
+
+.leaderboard-section{
+  padding:80px 20px 42px;
+}
+
+.leaderboard-tabs{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin:0 auto 28px;
+  max-width:920px;
+}
+
+.leaderboard-tab{
+  appearance:none;
+  border:1px solid rgba(255,255,255,0.16);
+  background:rgba(255,255,255,0.08);
+  color:inherit;
+  padding:14px 22px;
+  border-radius:999px;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  min-width:140px;
+}
+
+.leaderboard-tab:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,0.16);
+}
+
+.leaderboard-tab.active{
+  background:linear-gradient(135deg,var(--lb-primary),var(--lb-secondary));
+  color:#090b12;
+  box-shadow:0 24px 60px rgba(0,0,0,0.25);
+  border-color:rgba(255,255,255,0.28);
+}
+
+.leaderboard-content{
+  max-width:1400px;
+  margin:0 auto;
+  position:relative;
+  min-height:360px;
+}
+
+.leaderboard-section.leaderboard-mode-spellbee{
+  --lb-primary:#ffb43f;
+  --lb-secondary:#ff6258;
+  --lb-soft:rgba(255,185,80,0.18);
+}
+
+.leaderboard-section.leaderboard-mode-spot{
+  --lb-primary:#4fd5ff;
+  --lb-secondary:#2d8cff;
+  --lb-soft:rgba(79,213,255,0.18);
+}
+
+.leaderboard-section.leaderboard-mode-hangman{
+  --lb-primary:#d18cff;
+  --lb-secondary:#c135ff;
+  --lb-soft:rgba(209,140,255,0.18);
+}
+
+.leaderboard-panel{
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 0.35s ease, transform 0.35s ease;
+  display:none;
+}
+
+.leaderboard-panel.active{
+  display:block;
+  opacity:1;
+  transform:translateY(0);
+}
+
+.leaderboard-podium{
+  display:flex;
+  gap:20px;
+  align-items:flex-end;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.podium-card{
+  flex:1 1 0;
+  min-width:200px;
+  max-width:320px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:28px;
+  padding:24px 18px 100px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,0.18);
+  transition:transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+  cursor:pointer;
+}
+
+.podium-card > :not(.podium-step):not(.podium-glow){
+  position:relative;
+  z-index:1;
+}
+
+.podium-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at top,var(--lb-soft,rgba(255,255,255,0.12)),transparent 52%);
+  opacity:0.9;
+  pointer-events:none;
+}
+
+.podium-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 28px 66px rgba(0,0,0,0.22);
+  border-color:rgba(255,255,255,0.28);
+}
+
+.podium-card.first{
+  min-height:320px;
+  margin-top:-16px;
+  padding-bottom:110px;
+}
+
+.podium-card.second,
+.podium-card.third{
+  min-height:300px;
+  padding-bottom:100px;
+}
+
+.podium-card.first::after{
+  content:'';
+  position:absolute;
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:56px;
+  height:16px;
+  background:rgba(255,255,255,0.12);
+  border-radius:999px;
+  filter:blur(8px);
+}
+
+.podium-rank{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:18px;
+  font-weight:800;
+  color:#fff;
+}
+
+.podium-rank span:first-child{
+  font-size:1.8rem;
+}
+
+.podium-avatar-frame{
+  width:92px;
+  height:92px;
+  border-radius:50%;
+  margin:0 auto 2px;
+  overflow:visible;
+  border:2px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.14);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 10px 28px rgba(0,0,0,0.18);
+  position:relative;
+}
+
+.podium-avatar{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.podium-crown{
+  position:absolute;
+  top:-14px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:1.5rem;
+  text-shadow:0 6px 16px rgba(0,0,0,0.24);
+  z-index:3;
+}
+
+.podium-confetti{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:2;
+}
+
+.podium-confetti::before,
+.podium-confetti::after{
+  content:'';
+  position:absolute;
+  opacity:0.95;
+}
+
+.podium-confetti::before{
+  top:-8%;
+  left:12%;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#ffd43d;
+  box-shadow: 26px 6px #ff5f5f, 8px 28px #4fd5ff, 42px 18px #ffb43f, 58px 30px #d18cff;
+  animation:confettiFloat 2.4s ease-in-out infinite;
+}
+
+.podium-confetti::after{
+  top:16%;
+  left:20%;
+  width:4px;
+  height:14px;
+  border-radius:4px;
+  background:#ffffff;
+  box-shadow: 24px -8px #ff8c55, 42px 10px #9d52ff, 66px -6px #4fd5ff;
+  animation:confettiFall 2.8s ease-in-out infinite;
+}
+
+.podium-rank{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:8px auto 18px;
+  font-weight:800;
+  color:#fff;
+}
+
+.podium-rank span{
+  font-size:2.4rem;
+  line-height:1;
+}
+
+.podium-name{
+  font-size:1.25rem;
+  font-weight:800;
+  margin-bottom:10px;
+  letter-spacing:0.01em;
+}
+
+.podium-score{
+  font-size:1rem;
+  opacity:0.95;
+  margin-bottom:12px;
+}
+
+.podium-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.1);
+  color:white;
+  font-size:0.95rem;
+  font-weight:800;
+  backdrop-filter:blur(10px);
+  position:relative;
+  z-index:2;
+}
+
+.podium-step{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:88%;
+  height:48px;
+  background:rgba(255,255,255,0.08);
+  border-radius:999px 999px 30px 30px;
+  z-index:0;
+}
+
+.podium-card.first .podium-step{
+  height:64px;
+  width:94%;
+}
+
+.podium-crown{
+  position:absolute;
+  top:-14px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:1.5rem;
+  text-shadow:0 6px 16px rgba(0,0,0,0.24);
+  z-index:3;
+}
+
+.podium-confetti{
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:120px;
+  height:90px;
+  pointer-events:none;
+  z-index:0;
+}
+
+.podium-confetti::before,
+.podium-confetti::after{
+  content:'';
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  opacity:0.9;
+}
+
+.podium-confetti::before{
+  top:12px;
+  left:18px;
+  background:#ffd43d;
+  box-shadow: 40px 8px #ff5f5f, 24px 44px #4fd5ff, 70px 14px #ffb43f, 92px 48px #d18cff;
+  animation:confettiFloat 2.4s ease-in-out infinite;
+}
+
+.podium-confetti::after{
+  top:44px;
+  left:8px;
+  width:6px;
+  height:14px;
+  border-radius:4px;
+  background:#ffffff;
+  box-shadow: 32px -10px #ff8c55, 56px 18px #9d52ff, 84px -8px #4fd5ff;
+  animation:confettiFall 2.8s ease-in-out infinite;
+}
+
+@keyframes confettiFloat{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-4px); }
+}
+
+@keyframes confettiFall{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(5px); }
+}
+
+.podium-card.first .podium-name{
+  font-size:1.35rem;
+}
+
+.podium-card.second .podium-name,
+.podium-card.third .podium-name{
+  font-size:1.18rem;
+}
+
+.podium-card.first .podium-badge{
+  background:rgba(255,255,255,0.18);
+}
+
+.podium-card.second .podium-badge,
+.podium-card.third .podium-badge{
+  background:rgba(255,255,255,0.12);
+}
+
+.podium-glow{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0.25;
+  filter:blur(18px);
+}
+
+.podium-card.first .podium-glow{
+  background:radial-gradient(circle at top,var(--lb-primary),transparent 55%);
+  opacity:0.65;
+}
+
+.podium-card.second .podium-glow{
+  background:radial-gradient(circle at top,#cdd6ff,transparent 60%);
+  opacity:0.4;
+}
+
+.podium-card.third .podium-glow{
+  background:radial-gradient(circle at top,#ffd4b0,transparent 60%);
+  opacity:0.35;
+}
+
+.leaderboard-meta{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-top:18px;
+}
+
+.leaderboard-meta-item{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px;
+  padding:14px 16px;
+}
+
+.leaderboard-meta-item span{
+  display:block;
+  opacity:0.7;
+  font-size:0.88rem;
+  margin-bottom:6px;
+}
+
+.leaderboard-meta-item strong{
+  font-size:1rem;
+  font-weight:800;
+}
+
+.profile-modal-backdrop{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(7,10,18,0.75);
+  backdrop-filter:blur(14px);
+  z-index:4000;
+}
+
+.profile-modal-backdrop.active{
+  display:flex;
+}
+
+.profile-modal{
+  width:min(560px,100%);
+  max-height:calc(100vh - 64px);
+  overflow:auto;
+  background:rgba(7,12,20,0.95);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:30px;
+  padding:26px;
+  position:relative;
+  box-shadow:0 32px 90px rgba(0,0,0,0.35);
+  animation:modalPop 0.34s ease;
+}
+
+.modal-close{
+  position:absolute;
+  top:18px;
+  right:18px;
+  border:none;
+  background:rgba(255,255,255,0.1);
+  color:white;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:1.15rem;
+}
+
+.modal-header{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.modal-avatar{
+  width:88px;
+  height:88px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,0.18);
+  object-fit:cover;
+  background:rgba(255,255,255,0.08);
+}
+
+.modal-title{
+  font-size:1.7rem;
+  font-weight:800;
+  line-height:1.1;
+}
+
+.modal-subtitle{
+  opacity:0.75;
+  margin-top:4px;
+}
+
+.modal-grid{
+  display:grid;
+  gap:14px;
+  margin-top:18px;
+}
+
+.modal-grid .modal-detail{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:20px;
+  padding:14px 16px;
+}
+
+.modal-grid .modal-detail span{
+  color:rgba(255,255,255,0.8);
+  font-size:0.95rem;
+}
+
+.modal-grid .modal-detail strong{
+  font-weight:800;
+}
+
+.modal-badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:18px;
+}
+
+.modal-badge{
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px;
+  padding:10px 14px;
+  font-size:0.95rem;
+}
+
+@keyframes modalPop{
+  from{ opacity:0; transform:translateY(18px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+@media(max-width:900px){
+  .leaderboard-section{ padding:60px 18px 34px; }
+  .leaderboard-tabs{ gap:10px; }
+  .leaderboard-tab{ min-width:120px; padding:12px 18px; }
+  .leaderboard-content{ min-height:420px; }
+  .leaderboard-podium{ flex-direction:column; align-items:center; }
+  .podium-card{ width:min(92vw,360px); max-width:none; }
+  .podium-card.first{ margin-top:0; }
+  .modal-header{ flex-direction:column; align-items:flex-start; }
+  .modal-avatar{ width:76px; height:76px; }
+}
+
+@media(max-width:600px){
+  .leaderboard-section{ padding:48px 16px 28px; }
+  .modal-grid .modal-detail{ flex-direction:column; align-items:flex-start; gap:8px; }
+  .modal-badge{ width:100%; justify-content:center; }
 }
 
 .reviews{
@@ -1030,7 +1641,7 @@ body{
 <h1>Learn English.<br>Like An Arcade Game.</h1>
 
 <p>
-EngBoo transforms grammar, spelling, and vocabulary into entertainnig games with streaks, coins, and rewards.
+EngBoo transforms grammar, spelling, and vocabulary into entertaining games with streaks, coins, and rewards.
 </p>
 
 <div class="hero-buttons">
@@ -1109,7 +1720,7 @@ Classic hangman redesigned with modern visuals, pressure mechanics, and competit
 
 <div class="game-actions">
 <a href="Hangman.html" class="play-btn">Play Now</a>
-<!-- <a href="#" class="leaderboard-btn">Leaderboard</a> -->
+
 </div>
 
 </div>
@@ -1136,6 +1747,20 @@ Typing races, pronunciation battles, speed quizzes, vocabulary PvP, and more are
 </div>
 </div>
 </section>  
+
+<section class="leaderboard-section" id="leaderboard">
+
+<h2 class="section-title">Top Players</h2>
+
+<div class="leaderboard-tabs" role="tablist">
+  <button type="button" class="leaderboard-tab active" data-mode="spellbee">Spell Bee</button>
+  <button type="button" class="leaderboard-tab" data-mode="spot">Spot The Error</button>
+  <button type="button" class="leaderboard-tab" data-mode="hangman">Hangman</button>
+</div>
+
+<div class="leaderboard-content" id="leaderboardContent"></div>
+
+</section>
 
 <section class="reviews" id="reviews">
 
@@ -1180,6 +1805,13 @@ Play smoothly on phones, tablets, and computers with responsive controls designe
 </p>
 </div>
 
+<div class="feature-card">
+<h3>👁️ Easy To Read</h3>
+<p>
+Built with accessibility-focused typography and responsive layouts for comfortable reading across phones, tablets, and desktops.
+</p>
+</div>
+
 </div>
 
 </section>
@@ -1205,7 +1837,7 @@ The website is beta, prone to bugs.<a href="mailto:zaptrone.designs@gmail.com">r
 <div class="faq-item">
 <div class="faq-question">How to Leave review? 😽</div>
 <div class="faq-answer">
-Send your honest review to <a href="mailto:zaptrone.designs@gmail.com">our mail</a> also include star rating out of 5.
+Send your honest review to <a href="mailto:zaptrone.designs@gmail.com">our mail</a> also include star rating out of 5 and your EngBoo username.
 </div>
 </div>
 
@@ -1289,7 +1921,35 @@ Built with passion for interactive English learning.
 
 
 
+<div class="profile-modal-backdrop" id="profileModalBackdrop" aria-hidden="true">
+  <div class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <button class="mobile-close modal-close" id="profileModalClose">X</button>
+    <div class="modal-header">
+      <img src="assets/cat/catlogo.png" alt="Player avatar" class="modal-avatar" id="modalAvatar">
+      <div>
+        <div class="modal-title" id="profileModalTitle">Player Name</div>
+        <div class="modal-subtitle" id="modalSubtitle">Top arcade challenger</div>
+      </div>
+    </div>
+    <div class="modal-grid">
+      <div class="modal-detail"><span>XP</span><strong id="modalXp">0</strong></div>
+      <div class="modal-detail"><span>Coins</span><strong id="modalCoins">0</strong></div>
+      <div class="modal-detail"><span>Total score</span><strong id="modalTotalScore">0</strong></div>
+      <div class="modal-detail"><span>Win streak</span><strong id="modalWinStreak">0</strong></div>
+      <div class="modal-detail"><span>Country</span><strong id="modalCountry">Unknown</strong></div>
+      <div class="modal-detail"><span>Accuracy</span><strong id="modalAccuracy">0%</strong></div>
+      <div class="modal-detail"><span>Games played</span><strong id="modalGamesPlayed">0</strong></div>
+      <div class="modal-detail"><span>Favorite mode</span><strong id="modalFavorite">Spell Bee</strong></div>
+    </div>
+    <div class="modal-badges" id="modalBadges"></div>
+  </div>
+</div>
+
 <script src="storage.js"></script>
+<script src="questions/spellbee.js"></script>
+<script src="questions/hangman.js"></script>
+<script src="questions/spot.js"></script>
+<script src="app.js"></script>
 
 <script>
 
@@ -1302,6 +1962,7 @@ window.addEventListener("load", () => {
   }
 
   loadReviews();
+  buildLeaderboard('spellbee');
 });
 
 const hamburger = document.getElementById('hamburger');
@@ -1355,7 +2016,7 @@ const reviews = [
     text:'The game was entertaining to play and very nice :3'
   },
   {
-    username:'Arlene',
+    username:'Ayla',
     avatar:'assets/cat/catlogo.png',
     stars:5,
     date:'May 23, 2026',
@@ -1376,6 +2037,159 @@ const reviews = [
     text:'Good 👍🏿, Could improve the hangman keyboard 😘'
   }
 ];
+
+const leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
+const leaderboardContent = document.getElementById('leaderboardContent');
+const profileModalBackdrop = document.getElementById('profileModalBackdrop');
+const profileModalClose = document.getElementById('profileModalClose');
+const modalFields = {
+  avatar: document.getElementById('modalAvatar'),
+  title: document.getElementById('profileModalTitle'),
+  subtitle: document.getElementById('modalSubtitle'),
+  xp: document.getElementById('modalXp'),
+  coins: document.getElementById('modalCoins'),
+  totalScore: document.getElementById('modalTotalScore'),
+  winStreak: document.getElementById('modalWinStreak'),
+  country: document.getElementById('modalCountry'),
+  accuracy: document.getElementById('modalAccuracy'),
+  gamesPlayed: document.getElementById('modalGamesPlayed'),
+  favorite: document.getElementById('modalFavorite'),
+  badges: document.getElementById('modalBadges')
+};
+
+function buildLeaderboard(mode = 'spellbee'){
+  if (!leaderboardContent) return;
+
+  const players =
+getLeaderboard(mode).slice(0,3);
+  const podiumHtml = players.map((player, index) => {
+    const rank = index + 1;
+    const label = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
+    const tier = rank === 1 ? 'first' : rank === 2 ? 'second' : 'third';
+
+    return `
+      <button type="button" class="podium-card ${tier}" data-player-id="${player.id}">
+        <div class="podium-glow"></div>
+        <div class="podium-avatar-frame">
+          ${rank === 1 ? '<div class="podium-crown">👑</div>' : ''}
+          <img src="${player.avatar}" alt="${player.username} avatar" class="podium-avatar">
+          ${rank === 1 ? '<div class="podium-confetti"></div>' : ''}
+        </div>
+        <div class="podium-rank"><span>${label}</span></div>
+        <div class="podium-name">${player.username}</div>
+        <div class="podium-score">${player.score.toLocaleString()} pts</div>
+   <div class="podium-badge">${player.level || 'Beginner'}</div>
+        <div class="podium-step"></div>
+      </button>`;
+  }).join('');
+
+  leaderboardContent.innerHTML = `
+    <div class="leaderboard-panel active" data-mode="${mode}">
+      <div class="leaderboard-podium">
+        ${podiumHtml}
+      </div>
+    </div>
+  `;
+
+  setLeaderboardTheme(mode);
+  attachLeaderboardActions();
+}
+
+function attachLeaderboardActions(){
+  const cards = leaderboardContent.querySelectorAll('.podium-card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const player = findPlayerById(card.dataset.playerId);
+      if (player) openProfileModal(player);
+    });
+  });
+}
+
+function findPlayerById(id){
+  return Object.values(leaderboardData).flat().find(player => player.id === id);
+}
+
+function setLeaderboardTheme(mode){
+  leaderboardTabs.forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.mode === mode);
+  });
+
+  const leaderboardSection = document.getElementById('leaderboard');
+  if (!leaderboardSection) return;
+  leaderboardSection.classList.remove('leaderboard-mode-spellbee','leaderboard-mode-spot','leaderboard-mode-hangman');
+  leaderboardSection.classList.add(`leaderboard-mode-${mode}`);
+}
+
+leaderboardTabs.forEach(tab => {
+  tab.addEventListener('click', () => buildLeaderboard(tab.dataset.mode));
+});
+
+function openProfileModal(player){
+
+  modalFields.avatar.src =
+  player.avatar;
+
+  modalFields.title.textContent =
+  player.username;
+
+  modalFields.subtitle.textContent =
+  `${player.favorite} champion`;
+
+  modalFields.xp.textContent =
+  player.xp;
+
+  modalFields.coins.textContent =
+  player.coins;
+
+  modalFields.totalScore.textContent =
+  player.totalScore;
+
+  modalFields.winStreak.textContent =
+  player.winStreak;
+
+  modalFields.country.textContent =
+  player.country;
+
+  modalFields.accuracy.textContent =
+  player.accuracy;
+
+  modalFields.gamesPlayed.textContent =
+  player.gamesPlayed;
+
+  modalFields.favorite.textContent =
+  player.favorite;
+
+  modalFields.badges.innerHTML =
+  player.badges.map(badge => `<span class="modal-badge">${badge}</span>`).join('');
+
+  profileModalBackdrop
+  .classList.add('active');
+
+  document.body.style.overflow =
+  'hidden';
+
+}
+
+function closeProfileModal(){
+  profileModalBackdrop.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+if (profileModalClose) {
+  profileModalClose.addEventListener('click', closeProfileModal);
+}
+
+profileModalBackdrop.addEventListener('click', event => {
+  if (event.target === profileModalBackdrop) {
+    closeProfileModal();
+  }
+});
+
+window.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && profileModalBackdrop.classList.contains('active')) {
+    closeProfileModal();
+  }
+});
 
 let currentIndex = 0;
 
@@ -1529,7 +2343,7 @@ function logout() {
   saveData(data); // IMPORTANT: you must have this in storage.js
 
   // redirect to login
-  window.location.href = "login.html";
+  window.location.href = "Login.html";
 }
 
 const heroCat =

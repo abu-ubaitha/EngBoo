@@ -161,3 +161,90 @@ function updateScore(game, score) {
 
   saveData(data);
 }
+
+function getLeaderboard(game){
+
+  let data = getData();
+
+  let leaderboard = [];
+
+  for(let username in data.users){
+
+    let user = data.users[username];
+
+    let stats =
+    user.stats?.[game];
+
+    let score = stats?.best || 0;
+
+    let level = "Rookie";
+
+    if(score >= 500){
+      level = "Legend";
+    }
+
+    else if(score >= 300){
+      level = "Master";
+    }
+
+    else if(score >= 180){
+      level = "Pro";
+    }
+
+    else if(score >= 100){
+      level = "Skilled";
+    }
+
+    else if(score >= 40){
+      level = "Learner";
+    }
+
+    leaderboard.push({
+
+      id: username,
+
+      username: username,
+
+      avatar:'assets/cat/catlogo.png',
+
+      score: score,
+
+      plays: stats?.plays || 0,
+
+      joinedAt: user.joinedAt,
+
+      level: level,
+
+      xp: score * 3,
+
+      coins: Math.floor(score / 2),
+
+      totalScore: score,
+
+      winStreak: Math.floor(score / 15),
+
+      country: "India",
+
+      accuracy: Math.min(100, 55 + Math.floor(score / 8)) + "%",
+
+      gamesPlayed: stats?.plays || 0,
+
+      favorite: game,
+
+      badges: [
+        level + " Rank",
+        score >= 100 ? "🔥 High Scorer" : "🎮 New Challenger",
+        stats?.plays >= 10 ? "⚡ Active Player" : "🌱 Beginner"
+      ]
+
+    });
+
+  }
+
+  leaderboard.sort(
+    (a,b)=> b.score - a.score
+  );
+
+  return leaderboard;
+
+}

@@ -1,0 +1,21 @@
+{
+  "name": "EngBoo",
+  "short_name": "EngBoo",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#080b16",
+  "theme_color": "#60d6ff",
+  "description": "A premium arcade-style English learning platform.",
+  "icons": [
+    {
+      "src": "assets/cat/catlogo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/cat/catlogo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
