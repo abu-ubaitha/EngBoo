@@ -1594,7 +1594,8 @@ function startTimer(){
 
 function endGame(){
 
-updateScore("spot", score);
+  updateScore("spot", score);
+  submitScore("spot", score);
 
   clearInterval(timerInterval);
 

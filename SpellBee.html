@@ -945,9 +945,10 @@ function endGame(){
 
   clearInterval(timerInterval);
 
-updateScore("spellbee", score);
-spellbeeCat.style.transition = "none";
-spellbeeCat.style.opacity = "0";
+  updateScore("spellbee", score);
+  submitScore("spellbee", score);
+  spellbeeCat.style.transition = "none";
+  spellbeeCat.style.opacity = "0";
   document.getElementById("game-area").style.display = "none";
 
   document.getElementById("game-over").style.display = "block";

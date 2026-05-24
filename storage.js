@@ -1,3 +1,54 @@
+async function submitScore(game, score){
+
+  const data = getData();
+
+  const username =
+  data.currentUser;
+
+  if(!username) return;
+
+  // CHECK EXISTING SCORE
+
+  const { data: existing } =
+  await supabaseClient
+    .from("leaderboard")
+    .select("*")
+    .eq("username", username)
+    .eq("game", game)
+    .single();
+
+  // UPDATE ONLY IF HIGHER
+
+  if(existing){
+
+    if(score > existing.score){
+
+      await supabaseClient
+        .from("leaderboard")
+        .update({
+          score: score
+        })
+        .eq("id", existing.id);
+
+    }
+
+  }
+
+  else{
+
+    await supabaseClient
+      .from("leaderboard")
+      .insert([
+        {
+          username: username,
+          game: game,
+          score: score
+        }
+      ]);
+
+  }
+
+}
 
 // ======================
 // GAME DATA ENGINE
@@ -162,50 +213,28 @@ function updateScore(game, score) {
   saveData(data);
 }
 
-function getLeaderboard(game){
+async function getLeaderboard(game){
 
-  let data = getData();
+  const { data, error } =
+  await supabaseClient
+    .from("leaderboard")
+    .select("*")
+    .eq("game", game)
+    .order("score", {
+      ascending:false
+    })
+    .limit(10);
 
-  let leaderboard = [];
+  if(error){
 
-  for(let username in data.users){
+    console.error(error);
+    return [];
 
-    let user = data.users[username];
+  }
 
-    let stats =
-    user.stats?.[game];
+  return data;
 
-    let score = stats?.best || 0;
-
-    let level = "Rookie";
-
-    if(score >= 500){
-      level = "Legend";
-    }
-
-    else if(score >= 300){
-      level = "Master";
-    }
-
-    else if(score >= 180){
-      level = "Pro";
-    }
-
-    else if(score >= 100){
-      level = "Skilled";
-    }
-
-    else if(score >= 40){
-      level = "Learner";
-    }
-
-    leaderboard.push({
-
-      id: username,
-
-      username: username,
-
-      avatar:'assets/cat/catlogo.png',
+}
 
       score: score,
 

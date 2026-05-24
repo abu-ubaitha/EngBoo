@@ -1946,6 +1946,7 @@ Built with passion for interactive English learning.
 </div>
 
 <script src="storage.js"></script>
+<script src="supabase.js"></script>
 <script src="questions/spellbee.js"></script>
 <script src="questions/hangman.js"></script>
 <script src="questions/spot.js"></script>
@@ -2057,11 +2058,12 @@ const modalFields = {
   badges: document.getElementById('modalBadges')
 };
 
-function buildLeaderboard(mode = 'spellbee'){
+async function buildLeaderboard(mode = 'spellbee'){
   if (!leaderboardContent) return;
 
   const players =
-getLeaderboard(mode).slice(0,3);
+(await getLeaderboard(mode))
+.slice(0,3);
   const podiumHtml = players.map((player, index) => {
     const rank = index + 1;
     const label = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
@@ -2359,6 +2361,6 @@ window.addEventListener("scroll",()=>{
 });
 
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </body>
 </html>
